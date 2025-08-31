@@ -13,6 +13,8 @@ interface CartItem {
   quantity: number;
   specifications?: string;
   brand?: string;
+  images?: string[];
+  categoryEmoji?: string;
 }
 
 interface Product {
@@ -145,7 +147,9 @@ export default function CataloguePage() {
         category: selectedProduct.category.nameAr,
         quantity: popupQuantity,
         specifications: popupSpecs || undefined,
-        brand: popupBrand || undefined
+        brand: popupBrand || undefined,
+        images: selectedProduct.images,
+        categoryEmoji: selectedProduct.category.emoji
       };
       
       setCartItems(prev => [...prev, newItem]);
@@ -216,7 +220,28 @@ export default function CataloguePage() {
                 ) : (
                   cartItems.map((item) => (
                     <div key={item.id} className="flex items-center gap-3 p-2 rounded-xl border border-slate-100 hover:border-slate-200">
-                      <div className="h-12 w-16 rounded-lg bg-slate-100 border border-slate-200" />
+                      <div className="h-12 w-16 rounded-lg bg-slate-100 border border-slate-200 overflow-hidden">
+                        {item.images && item.images.length > 0 ? (
+                          <img
+                            src={item.images[0]}
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              // Fallback to emoji if image fails to load
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              const parent = target.parentElement;
+                              if (parent) {
+                                parent.innerHTML = `<div class="w-full h-full flex items-center justify-center text-lg">${item.categoryEmoji || '📦'}</div>`;
+                              }
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <span className="text-lg">{item.categoryEmoji || '📦'}</span>
+                          </div>
+                        )}
+                      </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold truncate">{item.name}</p>
                         <p className="text-xs text-slate-500">الكمية: {item.quantity}</p>

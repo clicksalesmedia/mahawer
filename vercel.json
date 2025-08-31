@@ -2,8 +2,13 @@
   "buildCommand": "npm run build",
   "installCommand": "npm install --legacy-peer-deps",
   "env": {
+    "DATABASE_URL": "postgresql://neondb_owner:npg_FQb9Tamug2xS@ep-aged-waterfall-ad7c6xpg-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require",
+    "POSTGRES_PRISMA_URL": "postgresql://neondb_owner:npg_FQb9Tamug2xS@ep-aged-waterfall-ad7c6xpg-pooler.c-2.us-east-1.aws.neon.tech/neondb?connect_timeout=15&sslmode=require",
     "NEXTAUTH_URL": "https://mahawer.vercel.app",
-    "NEXTAUTH_SECRET": "mahawer-production-secret-key-2024-vercel"
+    "NEXTAUTH_SECRET": "mahawer-production-secret-key-2024-vercel",
+    "NEXT_PUBLIC_STACK_PROJECT_ID": "cfe4a71d-5546-45a5-86f0-89ff09849a31",
+    "NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY": "pck_madvfe59cgyh4p7dt6v43ktyde5546dxxahyt0f99qk3g",
+    "STACK_SECRET_SERVER_KEY": "ssk_t5gzywv2ybngxh8bh78xgvkcft5hy0a7zp149fdtseea8"
   },
   "functions": {
     "app/api/**/*.ts": {

@@ -9,7 +9,9 @@ export async function GET(request: Request) {
     const categoryId = searchParams.get('categoryId');
     const search = searchParams.get('search');
     const limitParam = searchParams.get('limit');
+    const pageParam = searchParams.get('page');
     const limit = limitParam ? parseInt(limitParam, 10) : undefined;
+    const page = pageParam ? parseInt(pageParam, 10) : 1;
 
     const whereCondition: {
       isActive: boolean;
@@ -37,6 +39,37 @@ export async function GET(request: Request) {
       ];
     }
 
+    // If pagination is requested, return paginated results with total count
+    if (limit && page) {
+      const skip = (page - 1) * limit;
+      
+      const [products, totalCount] = await Promise.all([
+        prisma.product.findMany({
+          where: whereCondition,
+          include: {
+            category: true,
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+          take: limit,
+          skip: skip,
+        }),
+        prisma.product.count({
+          where: whereCondition,
+        }),
+      ]);
+
+      return NextResponse.json({
+        products,
+        total: totalCount,
+        page,
+        limit,
+        totalPages: Math.ceil(totalCount / limit),
+      });
+    }
+
+    // For non-paginated requests (like hero carousel), return simple array
     const queryOptions: {
       where: typeof whereCondition;
       include: { category: true };

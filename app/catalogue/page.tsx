@@ -51,6 +51,11 @@ export default function CataloguePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const productsPerPage = 9;
+  
   const [showPopup, setShowPopup] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [popupQuantity, setPopupQuantity] = useState(1);
@@ -75,28 +80,36 @@ export default function CataloguePage() {
       const params = new URLSearchParams();
       if (selectedCategoryId) params.append('categoryId', selectedCategoryId);
       if (searchQuery) params.append('search', searchQuery);
+      params.append('page', currentPage.toString());
+      params.append('limit', productsPerPage.toString());
       
       const response = await fetch(`/api/products?${params.toString()}`);
       if (response.ok) {
         const data = await response.json();
-        setProducts(data);
+        setProducts(data.products || data);
+        setTotalProducts(data.total || data.length);
       }
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
       setLoading(false);
     }
-  }, [selectedCategoryId, searchQuery]);
+  }, [selectedCategoryId, searchQuery, currentPage]);
 
   // Fetch categories on mount
   useEffect(() => {
     fetchCategories();
   }, []);
 
-  // Fetch products when category or search changes
+  // Reset page when category or search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategoryId, searchQuery]);
+
+  // Fetch products when category, search, or page changes
   useEffect(() => {
     fetchProducts();
-  }, [selectedCategoryId, searchQuery, fetchProducts]);
+  }, [fetchProducts]);
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -379,23 +392,65 @@ export default function CataloguePage() {
               </div>
             )}
             {/* Pagination */}
-            <div className="mt-8 flex items-center justify-center gap-2">
-              <button className="px-3 py-2 rounded-lg border bg-white hover:border-brand-500">
-                السابق
-              </button>
-              <button className="px-3 py-2 rounded-lg border bg-slate-900 text-white">
-                1
-              </button>
-              <button className="px-3 py-2 rounded-lg border bg-white hover:border-brand-500">
-                2
-              </button>
-              <button className="px-3 py-2 rounded-lg border bg-white hover:border-brand-500">
-                3
-              </button>
-              <button className="px-3 py-2 rounded-lg border bg-white hover:border-brand-500">
-                التالي
-              </button>
-            </div>
+            {totalProducts > productsPerPage && (
+              <div className="mt-8">
+                <div className="flex items-center justify-center gap-2">
+                  <button 
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className={`px-4 py-2 rounded-lg border transition ${
+                      currentPage === 1 
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                        : 'bg-white hover:border-brand-500 hover:text-brand-700'
+                    }`}
+                  >
+                    السابق
+                  </button>
+                  
+                  {/* Page Numbers */}
+                  {(() => {
+                    const totalPages = Math.ceil(totalProducts / productsPerPage);
+                    const pages = [];
+                    const startPage = Math.max(1, currentPage - 1);
+                    const endPage = Math.min(totalPages, currentPage + 1);
+                    
+                    for (let i = startPage; i <= endPage; i++) {
+                      pages.push(
+                        <button
+                          key={i}
+                          onClick={() => setCurrentPage(i)}
+                          className={`px-3 py-2 rounded-lg border transition ${
+                            i === currentPage
+                              ? 'bg-brand-600 text-white border-brand-600'
+                              : 'bg-white hover:border-brand-500 hover:text-brand-700'
+                          }`}
+                        >
+                          {i}
+                        </button>
+                      );
+                    }
+                    return pages;
+                  })()}
+                  
+                  <button 
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(totalProducts / productsPerPage)))}
+                    disabled={currentPage >= Math.ceil(totalProducts / productsPerPage)}
+                    className={`px-4 py-2 rounded-lg border transition ${
+                      currentPage >= Math.ceil(totalProducts / productsPerPage)
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                        : 'bg-white hover:border-brand-500 hover:text-brand-700'
+                    }`}
+                  >
+                    التالي
+                  </button>
+                </div>
+                
+                {/* Pagination Info */}
+                <div className="mt-4 text-center text-sm text-slate-600">
+                  عرض {((currentPage - 1) * productsPerPage) + 1} - {Math.min(currentPage * productsPerPage, totalProducts)} من {totalProducts} منتج
+                </div>
+              </div>
+            )}
           </section>
           {/* Filters / Categories (Right) */}
           <aside className="lg:col-span-3 order-2 lg:order-none">

@@ -3,13 +3,37 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* Brand colors */
+  --brand-50: #f0f9ff;
+  --brand-100: #e0f2fe;
+  --brand-200: #bae6fd;
+  --brand-300: #7dd3fc;
+  --brand-400: #38bdf8;
+  --brand-500: #0ea5e9;
+  --brand-600: #0284c7;
+  --brand-700: #0369a1;
+  --brand-800: #075985;
+  --brand-900: #0c4a6e;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-cairo);
+  --font-mono: var(--font-inter);
+  
+  /* Brand color theme */
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-800: var(--brand-800);
+  --color-brand-900: var(--brand-900);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +46,32 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Cairo", system-ui, -apple-system, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  font-feature-settings: "kern";
+}
+
+/* Custom utilities */
+.container-pad { 
+  padding-inline: 1rem; 
+}
+
+@media (min-width: 640px) { 
+  .container-pad { 
+    padding-inline: 1.25rem; 
+  } 
+}
+
+@media (min-width: 1024px) { 
+  .container-pad { 
+    padding-inline: 2rem; 
+  } 
+}
+
+/* Custom shadow utilities */
+.shadow-soft {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.shadow-glow {
+  box-shadow: 0 0 0 1px rgb(59 130 246 / 0.15), 0 10px 15px -3px rgb(59 130 246 / 0.1), 0 4px 6px -4px rgb(59 130 246 / 0.1);
 }

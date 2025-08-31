@@ -1,0 +1,13 @@
+{
+  "buildCommand": "npm run build",
+  "installCommand": "npm install --legacy-peer-deps",
+  "env": {
+    "NEXTAUTH_URL": "https://mahawer.vercel.app",
+    "NEXTAUTH_SECRET": "mahawer-production-secret-key-2024-vercel"
+  },
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  }
+}

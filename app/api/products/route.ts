@@ -13,6 +13,8 @@ export async function GET(request: Request) {
     const limit = limitParam ? parseInt(limitParam, 10) : undefined;
     const page = pageParam ? parseInt(pageParam, 10) : 1;
 
+    console.log('API Request params:', { categoryId, search, limit, page, url: request.url });
+
     const whereCondition: {
       isActive: boolean;
       categoryId?: string;
@@ -60,6 +62,7 @@ export async function GET(request: Request) {
         }),
       ]);
 
+      console.log('Paginated products found:', products.length, 'total:', totalCount);
       return NextResponse.json({
         products,
         total: totalCount,
@@ -91,6 +94,7 @@ export async function GET(request: Request) {
 
     const products = await prisma.product.findMany(queryOptions);
 
+    console.log('Non-paginated products found:', products.length);
     return NextResponse.json(products);
   } catch (error) {
     console.error("Error fetching products:", error);

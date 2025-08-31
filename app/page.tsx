@@ -28,11 +28,17 @@ export default function Home() {
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
       try {
-        const response = await fetch('/api/products?limit=6');
+        const response = await fetch('/api/products?limit=6&page=1');
         if (response.ok) {
-          const products = await response.json();
-          console.log('Fetched products:', products.length, products);
-          setFeaturedProducts(products.slice(0, 6)); // Show first 6 products
+          const data = await response.json();
+          console.log('Fetched products data:', data);
+          
+          // Handle paginated response format: { products: [...], total: number }
+          const products = data.products || [];
+          console.log('Processed products:', products.length, products);
+          setFeaturedProducts(products); // Already limited to 6 by API
+        } else {
+          console.error('Failed to fetch products:', response.status, response.statusText);
         }
       } catch (error) {
         console.error('Error fetching featured products:', error);

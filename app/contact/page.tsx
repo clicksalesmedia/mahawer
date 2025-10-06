@@ -250,8 +250,9 @@ export default function ContactPage() {
                         <h3 className="font-bold text-lg mb-2">الهاتف</h3>
                         <p className="text-slate-600 mb-2">تواصل معنا مباشرة</p>
                         <div className="space-y-1">
-                          <p className="font-semibold text-brand-700">+966 50 000 0000</p>
-                          <p className="text-sm text-slate-500">الأحد - الخميس: 8:00 ص - 6:00 م</p>
+                          <p className="font-semibold text-brand-700" dir="ltr">+966 55 084 4033</p>
+                          <p className="text-sm text-slate-500">7 AM–8 PM</p>
+                          <p className="text-sm text-slate-500">Friday Closed</p>
                         </div>
                       </div>
                     </div>
@@ -266,8 +267,7 @@ export default function ContactPage() {
                         <h3 className="font-bold text-lg mb-2">البريد الإلكتروني</h3>
                         <p className="text-slate-600 mb-2">راسلنا في أي وقت</p>
                         <div className="space-y-1">
-                          <p className="font-semibold text-emerald-700">info@mahawer.com</p>
-                          <p className="text-sm text-slate-500">sales@mahawer.com</p>
+                          <p className="font-semibold text-emerald-700">info@mahawer-sa.com</p>
                         </div>
                       </div>
                     </div>
@@ -282,8 +282,17 @@ export default function ContactPage() {
                         <h3 className="font-bold text-lg mb-2">العنوان</h3>
                         <p className="text-slate-600 mb-2">مقرنا الرئيسي</p>
                         <div className="space-y-1">
-                          <p className="font-semibold text-purple-700">الرياض، المملكة العربية السعودية</p>
-                          <p className="text-sm text-slate-500">شارع الملك فهد، حي العليا</p>
+                          <p className="font-semibold text-purple-700">الدمام، المملكة العربية السعودية</p>
+                          <p className="text-sm text-slate-500">2ب، الفيحاء، الدمام 32442</p>
+                          <a 
+                            href="https://maps.app.goo.gl/KtHJAk1GYkCrYvS57?g_st=iwb" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-sm text-purple-600 hover:text-purple-700 font-medium transition"
+                          >
+                            <span>🗺️</span>
+                            عرض على الخريطة
+                          </a>
                         </div>
                       </div>
                     </div>
@@ -298,7 +307,7 @@ export default function ContactPage() {
                         <h3 className="font-bold text-lg mb-2">واتساب</h3>
                         <p className="text-slate-600 mb-2">للاستفسارات السريعة</p>
                         <div className="space-y-1">
-                          <p className="font-semibold text-green-700">+966 50 000 0000</p>
+                          <p className="font-semibold text-green-700" dir="ltr">+966 55 084 4033</p>
                           <p className="text-sm text-slate-500">متاح 24/7</p>
                         </div>
                       </div>

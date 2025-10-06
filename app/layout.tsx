@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cairo, Inter } from "next/font/google";
 import "./globals.css";
+import WhatsAppButton from "../components/WhatsAppButton";
 
 const cairo = Cairo({
   variable: "--font-cairo",
@@ -38,6 +39,7 @@ export default function RootLayout({
         }}
       >
         {children}
+        <WhatsAppButton />
       </body>
     </html>
   );

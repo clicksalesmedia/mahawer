@@ -145,12 +145,17 @@ export default function Home() {
                 تسعير سريع، عروض تنافسية، وتوصيل في نفس اليوم على مجموعة واسعة من مواد البناء.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <Link
-                  href="/catalogue"
+                <button
+                  onClick={() => {
+                    const phoneNumber = "966550844033";
+                    const message = encodeURIComponent("مرحباً، أود طلب عرض سعر لمواد البناء");
+                    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+                    window.open(whatsappUrl, "_blank");
+                  }}
                   className="w-full sm:w-auto px-6 py-3 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition shadow-soft"
                 >
                   اطلب عرض سعر الآن
-                </Link>
+                </button>
                 <Link
                   href="/catalogue"
                   className="w-full sm:w-auto px-6 py-3 rounded-xl border border-slate-300 hover:border-brand-500 hover:text-brand-700 transition"
@@ -183,12 +188,17 @@ export default function Home() {
                   تسعير سريع، عروض تنافسية، وتوصيل في نفس اليوم على مجموعة واسعة من مواد البناء.
                 </p>
                 <div className="mt-8 flex items-center gap-4">
-                  <Link
-                    href="/catalogue"
+                  <button
+                    onClick={() => {
+                      const phoneNumber = "966550844033";
+                      const message = encodeURIComponent("مرحباً، أود طلب عرض سعر لمواد البناء");
+                      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+                      window.open(whatsappUrl, "_blank");
+                    }}
                     className="px-6 py-3 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition shadow-soft"
                   >
                     اطلب عرض سعر الآن
-                  </Link>
+                  </button>
                   <Link
                     href="/catalogue"
                     className="px-6 py-3 rounded-xl border border-slate-300 hover:border-brand-500 hover:text-brand-700 transition"
@@ -208,8 +218,8 @@ export default function Home() {
                     <div className="text-sm text-slate-600">خدمة العملاء</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-slate-900">1-3</div>
-                    <div className="text-sm text-slate-600">أيام التوصيل</div>
+                    <div className="text-2xl font-bold text-slate-900">24</div>
+                    <div className="text-sm text-slate-600">ساعة للتوصيل</div>
                   </div>
                 </div>
               </div>
@@ -432,12 +442,17 @@ export default function Home() {
                 <li>إصدار عروض أسعار بسرعة ومقارنة سهلة.</li>
                 <li>خيارات تسليم ودفع حسب احتياجاتك.</li>
               </ul>
-              <Link
-                href="/catalogue"
+              <button
+                onClick={() => {
+                  const phoneNumber = "966550844033";
+                  const message = encodeURIComponent("مرحباً، أود شراء مواد بناء");
+                  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+                  window.open(whatsappUrl, "_blank");
+                }}
                 className="mt-5 inline-block px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white shadow-soft"
               >
                 اشترِ مواد بناء
-              </Link>
+              </button>
             </div>
             <div className="rounded-2xl bg-white border border-slate-200 p-6 shadow-soft">
               <div className="flex items-center justify-between">
@@ -517,12 +532,17 @@ export default function Home() {
                 >
                   تصفح المنتجات
                 </Link>
-                <Link
-                  href="/catalogue"
+                <button
+                  onClick={() => {
+                    const phoneNumber = "966550844033";
+                    const message = encodeURIComponent("مرحباً، أود طلب عرض سعر لمواد البناء");
+                    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+                    window.open(whatsappUrl, "_blank");
+                  }}
                   className="px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white shadow-glow"
                 >
                   اطلب عرض سعر
-                </Link>
+                </button>
               </div>
             </div>
           </div>

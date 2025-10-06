@@ -80,7 +80,7 @@ export default function AboutPage() {
                     <div className="h-16 w-16 mx-auto mb-3 rounded-2xl bg-purple-100 flex items-center justify-center">
                       <span className="text-2xl">📦</span>
                     </div>
-                    <div className="text-2xl font-bold text-slate-900">1000+</div>
+                    <div className="text-2xl font-bold text-slate-900">500+</div>
                     <div className="text-sm text-slate-500">منتج متوفر</div>
                   </div>
                   <div className="text-center">
@@ -269,21 +269,21 @@ export default function AboutPage() {
                     <span className="text-xl">📞</span>
                   </div>
                   <div className="text-sm text-slate-300">هاتف</div>
-                  <div className="font-semibold">+966 50 000 0000</div>
+                  <div className="font-semibold" dir="ltr">+966 55 084 4033</div>
                 </div>
                 <div className="text-center">
                   <div className="h-12 w-12 mx-auto mb-3 rounded-xl bg-white/10 flex items-center justify-center">
                     <span className="text-xl">✉️</span>
                   </div>
                   <div className="text-sm text-slate-300">بريد إلكتروني</div>
-                  <div className="font-semibold">info@mahawer.com</div>
+                  <div className="font-semibold">info@mahawer-sa.com</div>
                 </div>
                 <div className="text-center">
                   <div className="h-12 w-12 mx-auto mb-3 rounded-xl bg-white/10 flex items-center justify-center">
                     <span className="text-xl">📍</span>
                   </div>
                   <div className="text-sm text-slate-300">العنوان</div>
-                  <div className="font-semibold">الرياض، المملكة العربية السعودية</div>
+                  <div className="font-semibold">الدمام، المملكة العربية السعودية</div>
                 </div>
               </div>
               <div className="flex flex-wrap gap-3 justify-center">
@@ -293,12 +293,17 @@ export default function AboutPage() {
                 >
                   تصفح المنتجات
                 </Link>
-                <Link
-                  href="/quotation"
+                <button
+                  onClick={() => {
+                    const phoneNumber = "966550844033";
+                    const message = encodeURIComponent("مرحباً، أود طلب عرض سعر لمواد البناء");
+                    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+                    window.open(whatsappUrl, "_blank");
+                  }}
                   className="px-6 py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white shadow-glow transition"
                 >
                   طلب عرض سعر
-                </Link>
+                </button>
               </div>
             </div>
           </div>

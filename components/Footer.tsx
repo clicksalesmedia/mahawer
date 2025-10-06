@@ -6,7 +6,27 @@ export default function Footer() {
   return (
     <footer className="py-10 border-t border-slate-200 bg-white">
       <div className="max-w-7xl mx-auto container-pad">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        {/* Company Information */}
+        <div className="mb-8 text-center">
+          <h3 className="text-lg font-bold text-slate-900 mb-4">محاور التوريد التجارية</h3>
+          <div className="grid md:grid-cols-3 gap-4 text-sm text-slate-600">
+            <div>
+              <span className="font-semibold">رقم السجل التجاري:</span>
+              <span className="mr-2" dir="ltr">1049919175</span>
+            </div>
+            <div>
+              <span className="font-semibold">تاريخ التسجيل:</span>
+              <span className="mr-2">1447/01/01 هـ</span>
+            </div>
+            <div>
+              <span className="font-semibold">المدينة:</span>
+              <span className="mr-2">الدمام، المملكة العربية السعودية</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation and Copyright */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-100">
           <div className="text-sm text-slate-500">
             © <span id="y">{new Date().getFullYear()}</span> محاور التوريد التجارية — جميع الحقوق محفوظة
           </div>

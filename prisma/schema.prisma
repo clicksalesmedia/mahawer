@@ -139,3 +139,19 @@ enum InquiryStatus {
   COMPLETED
   CANCELLED
 }
+
+// Hero Slider model
+model HeroSlider {
+  id          String   @id @default(cuid())
+  title       String   // Slider title
+  description String?  // Slider description
+  image       String   // Image URL
+  isActive    Boolean  @default(true)
+  order       Int      @default(0) // Display order
+  buttonText  String?  // Optional button text
+  buttonLink  String?  // Optional button link
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("hero_sliders")
+}

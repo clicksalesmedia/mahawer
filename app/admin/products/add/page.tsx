@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import ImageUpload from "../../../../components/ImageUpload";
 
 interface Category {
   id: string;
@@ -280,23 +281,21 @@ export default function AddProductPage() {
               </button>
             </div>
             
-            <div className="space-y-3">
+            <div className="space-y-6">
               {formData.images.map((image, index) => (
-                <div key={index} className="flex items-center gap-3">
+                <div key={index} className="flex items-start gap-4 p-4 border border-slate-200 rounded-lg">
                   <div className="flex-1">
-                    <input
-                      type="url"
-                      value={image}
-                      onChange={(e) => handleImageChange(index, e.target.value)}
-                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
-                      placeholder="رابط الصورة (URL)"
+                    <ImageUpload
+                      label={`الصورة ${index + 1}`}
+                      currentImage={image}
+                      onUpload={(url) => handleImageChange(index, url)}
                     />
                   </div>
                   {formData.images.length > 1 && (
                     <button
                       type="button"
                       onClick={() => removeImageField(index)}
-                      className="p-2 text-red-500 hover:text-red-700 transition"
+                      className="p-2 text-red-500 hover:text-red-700 transition mt-8"
                     >
                       ✕
                     </button>
@@ -305,8 +304,8 @@ export default function AddProductPage() {
               ))}
             </div>
             
-            <p className="text-sm text-slate-500 mt-2">
-              أدخل روابط الصور المباشرة. يمكنك إضافة عدة صور للمنتج الواحد.
+            <p className="text-sm text-slate-500 mt-4">
+              يمكنك إضافة عدة صور للمنتج الواحد. الصورة الأولى ستكون الصورة الرئيسية.
             </p>
           </div>
 

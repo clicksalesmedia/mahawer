@@ -153,7 +153,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Link href="/admin/products" className="group">
             <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-soft hover:shadow-md transition-all group-hover:border-brand-300">
               <div className="flex items-center gap-4">
@@ -163,6 +163,20 @@ export default function AdminDashboard() {
                 <div>
                   <h3 className="font-semibold text-slate-900">إدارة المنتجات</h3>
                   <p className="text-sm text-slate-500">إضافة وتعديل المنتجات</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/admin/sliders" className="group">
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-soft hover:shadow-md transition-all group-hover:border-orange-300">
+              <div className="flex items-center gap-4">
+                <div className="h-12 w-12 bg-orange-100 rounded-xl flex items-center justify-center group-hover:bg-orange-200 transition">
+                  🎨
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">إدارة شرائح البانر</h3>
+                  <p className="text-sm text-slate-500">تعديل شرائح البانر الرئيسي</p>
                 </div>
               </div>
             </div>

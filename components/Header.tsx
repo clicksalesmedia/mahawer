@@ -18,7 +18,11 @@ export default function Header() {
         <nav className="flex items-center justify-between py-3">
           {/* Brand */}
           <Link href="/" className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-2xl bg-gradient-to-br from-brand-500 to-emerald-500 shadow-glow" />
+            <img 
+              src="/logo.png" 
+              alt="محاور التوريد التجارية" 
+              className="h-9 w-9 object-contain"
+            />
             <div className="leading-tight">
               <div className="text-lg font-extrabold tracking-tight">
                 محاور التوريد التجارية

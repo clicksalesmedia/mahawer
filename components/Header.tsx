@@ -17,20 +17,12 @@ export default function Header() {
       <div className="max-w-7xl mx-auto container-pad">
         <nav className="flex items-center justify-between py-3">
           {/* Brand */}
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/" className="flex items-center">
             <img 
               src="/logo.png" 
-              alt="محاور التوريد التجارية" 
-              className="h-9 w-9 object-contain"
+              alt="Mahawer Supply Trading" 
+              className="h-12 w-12 object-contain"
             />
-            <div className="leading-tight">
-              <div className="text-lg font-extrabold tracking-tight">
-                محاور التوريد التجارية
-              </div>
-              <div className="text-xs text-slate-500 -mt-0.5">
-                Mahawer Supply Trading
-              </div>
-            </div>
           </Link>
           
           {/* Nav */}

@@ -493,13 +493,84 @@ export default function Home() {
             نقدّم لكم أفضل <span className="text-brand-700">العلامات التجارية</span>
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {/* Placeholder brand cards */}
-            <div className="h-16 rounded-xl bg-slate-100 border border-slate-200" />
-            <div className="h-16 rounded-xl bg-slate-100 border border-slate-200" />
-            <div className="h-16 rounded-xl bg-slate-100 border border-slate-200" />
-            <div className="h-16 rounded-xl bg-slate-100 border border-slate-200" />
-            <div className="h-16 rounded-xl bg-slate-100 border border-slate-200" />
-            <div className="h-16 rounded-xl bg-slate-100 border border-slate-200" />
+            {/* Partner Logos */}
+            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
+              <img
+                src="/partners/Dabg.png"
+                alt="DABG"
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
+              <img
+                src="/partners/Logo_Sika_AG.svg.png"
+                alt="Sika"
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
+              <img
+                src="/partners/SABIC_Logo_RGB_PNG_tcm12-2093.png"
+                alt="SABIC"
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
+              <img
+                src="/partners/weber-saint-gobain4363.jpg"
+                alt="Weber Saint Gobain"
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
+              <img
+                src="/partners/Kimmco isover new logo.png"
+                alt="Kimmco Isover"
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
+              <img
+                src="/partners/al-ittefaq-logo.jpg"
+                alt="Al Ittefaq"
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
+              <img
+                src="/partners/شركة-الجزيرة-للمنتجات-الحديدية.jpg"
+                alt="شركة الجزيرة للمنتجات الحديدية"
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
+              <img
+                src="/partners/شعار-سافيتو-1-qurs6pflxqxtwruduw2kp2jyxsl3iz55y6tm7bvsuo.jpg"
+                alt="سافيتو"
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
+              <img
+                src="/partners/images.png"
+                alt="Partner"
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
+              <img
+                src="/partners/about.png"
+                alt="Partner"
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
+              <img
+                src="/partners/9b6ffac5-5eb3-415a-9d5c-16c1746384c6_16x9_1200x676.webp"
+                alt="Partner"
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
           </div>
         </div>
       </section>

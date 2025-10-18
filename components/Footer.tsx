@@ -8,7 +8,13 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto container-pad">
         {/* Company Information */}
         <div className="mb-8 text-center">
-          <h3 className="text-lg font-bold text-slate-900 mb-4">محاور التوريد التجارية</h3>
+          <div className="flex justify-center mb-4">
+            <img 
+              src="/logo.png" 
+              alt="Mahawer Supply Trading" 
+              className="h-12 w-12 object-contain"
+            />
+          </div>
           <div className="grid md:grid-cols-3 gap-4 text-sm text-slate-600">
             <div>
               <span className="font-semibold">رقم السجل التجاري:</span>

@@ -31,6 +31,53 @@ interface HeroSlider {
   buttonLink?: string;
 }
 
+// TranslateWrapper Component
+const TranslateWrapper = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <motion.div
+      initial={{ translateX: "0%" }}
+      animate={{ translateX: "-100%" }}
+      transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+      className="flex gap-6 px-2"
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+// LogoItems Component
+const LogoItems = () => {
+  const partnerLogos = [
+    { src: "/partners/Dabg.png", alt: "DABG" },
+    { src: "/partners/Logo_Sika_AG.svg.png", alt: "Sika" },
+    { src: "/partners/SABIC_Logo_RGB_PNG_tcm12-2093.png", alt: "SABIC" },
+    { src: "/partners/weber-saint-gobain4363.jpg", alt: "Weber Saint Gobain" },
+    { src: "/partners/Kimmco isover new logo.png", alt: "Kimmco Isover" },
+    { src: "/partners/al-ittefaq-logo.jpg", alt: "Al Ittefaq" },
+    { src: "/partners/شركة-الجزيرة-للمنتجات-الحديدية.jpg", alt: "شركة الجزيرة للمنتجات الحديدية" },
+    { src: "/partners/شعار-سافيتو-1-qurs6pflxqxtwruduw2kp2jyxsl3iz55y6tm7bvsuo.jpg", alt: "سافيتو" },
+    { src: "/partners/images.png", alt: "Partner" },
+    { src: "/partners/about.png", alt: "Partner" },
+    { src: "/partners/9b6ffac5-5eb3-415a-9d5c-16c1746384c6_16x9_1200x676.webp", alt: "Partner" }
+  ];
+
+  return (
+    <>
+      {partnerLogos.map((partner, index) => (
+        <div key={index} className="w-32 md:w-40 h-20 md:h-24 flex-shrink-0">
+          <div className="w-full h-full rounded-xl bg-white border border-slate-200 p-4 flex items-center justify-center hover:shadow-xl transition-all duration-300 hover:scale-105">
+            <img
+              src={partner.src}
+              alt={partner.alt}
+              className="max-h-full max-w-full object-contain"
+            />
+          </div>
+        </div>
+      ))}
+    </>
+  );
+};
+
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [heroSliders, setHeroSliders] = useState<HeroSlider[]>([]);
@@ -46,20 +93,6 @@ export default function Home() {
   });
   const [hasAnimated, setHasAnimated] = useState(false);
 
-  // Partner logos array
-  const partnerLogos = [
-    { src: "/partners/Dabg.png", alt: "DABG" },
-    { src: "/partners/Logo_Sika_AG.svg.png", alt: "Sika" },
-    { src: "/partners/SABIC_Logo_RGB_PNG_tcm12-2093.png", alt: "SABIC" },
-    { src: "/partners/weber-saint-gobain4363.jpg", alt: "Weber Saint Gobain" },
-    { src: "/partners/Kimmco isover new logo.png", alt: "Kimmco Isover" },
-    { src: "/partners/al-ittefaq-logo.jpg", alt: "Al Ittefaq" },
-    { src: "/partners/شركة-الجزيرة-للمنتجات-الحديدية.jpg", alt: "شركة الجزيرة للمنتجات الحديدية" },
-    { src: "/partners/شعار-سافيتو-1-qurs6pflxqxtwruduw2kp2jyxsl3iz55y6tm7bvsuo.jpg", alt: "سافيتو" },
-    { src: "/partners/images.png", alt: "Partner" },
-    { src: "/partners/about.png", alt: "Partner" },
-    { src: "/partners/9b6ffac5-5eb3-415a-9d5c-16c1746384c6_16x9_1200x676.webp", alt: "Partner" }
-  ];
 
   // Fetch featured products on component mount
   useEffect(() => {
@@ -572,54 +605,17 @@ export default function Home() {
           </h2>
           
           {/* Infinite Scrolling Partner Logos - Single Row */}
-          <div className="relative w-full overflow-hidden">
+          <div className="overflow-hidden">
             <div className="flex">
-              <motion.div
-                animate={{ x: "-200%" }}
-                transition={{ 
-                  duration: 60, 
-                  repeat: Infinity, 
-                  ease: "linear"
-                }}
-                className="flex gap-6 flex-shrink-0"
-              >
-                {/* First set */}
-                {partnerLogos.map((partner, index) => (
-                  <div key={`set1-${index}`} className="w-32 md:w-40 h-20 md:h-24 flex-shrink-0">
-                    <div className="w-full h-full rounded-xl bg-white border border-slate-200 p-4 flex items-center justify-center hover:shadow-xl transition-all duration-300 hover:scale-110">
-                      <img
-                        src={partner.src}
-                        alt={partner.alt}
-                        className="max-h-full max-w-full object-contain"
-                      />
-                    </div>
-                  </div>
-                ))}
-                {/* Second set */}
-                {partnerLogos.map((partner, index) => (
-                  <div key={`set2-${index}`} className="w-32 md:w-40 h-20 md:h-24 flex-shrink-0">
-                    <div className="w-full h-full rounded-xl bg-white border border-slate-200 p-4 flex items-center justify-center hover:shadow-xl transition-all duration-300 hover:scale-110">
-                      <img
-                        src={partner.src}
-                        alt={partner.alt}
-                        className="max-h-full max-w-full object-contain"
-                      />
-                    </div>
-                  </div>
-                ))}
-                {/* Third set */}
-                {partnerLogos.map((partner, index) => (
-                  <div key={`set3-${index}`} className="w-32 md:w-40 h-20 md:h-24 flex-shrink-0">
-                    <div className="w-full h-full rounded-xl bg-white border border-slate-200 p-4 flex items-center justify-center hover:shadow-xl transition-all duration-300 hover:scale-110">
-                      <img
-                        src={partner.src}
-                        alt={partner.alt}
-                        className="max-h-full max-w-full object-contain"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </motion.div>
+              <TranslateWrapper>
+                <LogoItems />
+              </TranslateWrapper>
+              <TranslateWrapper>
+                <LogoItems />
+              </TranslateWrapper>
+              <TranslateWrapper>
+                <LogoItems />
+              </TranslateWrapper>
             </div>
           </div>
         </div>

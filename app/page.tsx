@@ -573,29 +573,54 @@ export default function Home() {
           
           {/* Infinite Scrolling Partner Logos - Single Row */}
           <div className="relative w-full overflow-hidden">
-            <motion.div
-              animate={{ x: [0, -1 * (partnerLogos.length * 176)] }}
-              transition={{ 
-                duration: 40, 
-                repeat: Infinity, 
-                ease: "linear",
-                repeatType: "loop"
-              }}
-              className="flex gap-6"
-            >
-              {/* Render logos 3 times to ensure seamless loop */}
-              {[...partnerLogos, ...partnerLogos, ...partnerLogos].map((partner, index) => (
-                <div key={index} className="w-32 md:w-40 h-20 md:h-24 flex-shrink-0">
-                  <div className="w-full h-full rounded-xl bg-white border border-slate-200 p-4 flex items-center justify-center hover:shadow-xl transition-all duration-300 hover:scale-110">
-                    <img
-                      src={partner.src}
-                      alt={partner.alt}
-                      className="max-h-full max-w-full object-contain"
-                    />
+            <div className="flex">
+              <motion.div
+                animate={{ x: "-200%" }}
+                transition={{ 
+                  duration: 60, 
+                  repeat: Infinity, 
+                  ease: "linear"
+                }}
+                className="flex gap-6 flex-shrink-0"
+              >
+                {/* First set */}
+                {partnerLogos.map((partner, index) => (
+                  <div key={`set1-${index}`} className="w-32 md:w-40 h-20 md:h-24 flex-shrink-0">
+                    <div className="w-full h-full rounded-xl bg-white border border-slate-200 p-4 flex items-center justify-center hover:shadow-xl transition-all duration-300 hover:scale-110">
+                      <img
+                        src={partner.src}
+                        alt={partner.alt}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
-            </motion.div>
+                ))}
+                {/* Second set */}
+                {partnerLogos.map((partner, index) => (
+                  <div key={`set2-${index}`} className="w-32 md:w-40 h-20 md:h-24 flex-shrink-0">
+                    <div className="w-full h-full rounded-xl bg-white border border-slate-200 p-4 flex items-center justify-center hover:shadow-xl transition-all duration-300 hover:scale-110">
+                      <img
+                        src={partner.src}
+                        alt={partner.alt}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
+                  </div>
+                ))}
+                {/* Third set */}
+                {partnerLogos.map((partner, index) => (
+                  <div key={`set3-${index}`} className="w-32 md:w-40 h-20 md:h-24 flex-shrink-0">
+                    <div className="w-full h-full rounded-xl bg-white border border-slate-200 p-4 flex items-center justify-center hover:shadow-xl transition-all duration-300 hover:scale-110">
+                      <img
+                        src={partner.src}
+                        alt={partner.alt}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>

@@ -113,11 +113,11 @@ export default function Home() {
     }
   }, [heroSliders.length]);
 
-  // Auto-advance partner carousel
+  // Auto-advance partner carousel (slide one by one)
   useEffect(() => {
     if (partnerLogos.length > 0) {
       const interval = setInterval(() => {
-        setCurrentPartnerSlide((prev) => (prev + 1) % Math.ceil(partnerLogos.length / 6));
+        setCurrentPartnerSlide((prev) => (prev + 1) % partnerLogos.length);
       }, 3000); // Change slide every 3 seconds
 
       return () => clearInterval(interval);
@@ -522,29 +522,48 @@ export default function Home() {
           
           {/* Partner Logos Carousel */}
           <div className="relative overflow-hidden">
-            <div className="flex transition-transform duration-500 ease-in-out"
-                 style={{ transform: `translateX(-${currentPartnerSlide * 100}%)` }}>
-              {Array.from({ length: Math.ceil(partnerLogos.length / 6) }).map((_, slideIndex) => (
-                <div key={slideIndex} className="w-full flex-shrink-0">
-                  <div className="grid grid-cols-3 lg:grid-cols-6 gap-6">
-                    {partnerLogos.slice(slideIndex * 6, slideIndex * 6 + 6).map((partner, index) => (
-                      <div key={index} className="h-24 rounded-xl bg-white border border-slate-200 p-4 flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-105">
-                        <img
-                          src={partner.src}
-                          alt={partner.alt}
-                          className="max-h-full max-w-full object-contain"
-                        />
-                      </div>
-                    ))}
+            {/* Mobile: 3 logos visible */}
+            <div className="block lg:hidden">
+              <div className="flex transition-transform duration-500 ease-in-out"
+                   style={{ transform: `translateX(-${currentPartnerSlide * (100 / 3)}%)` }}>
+                {/* Create infinite loop by duplicating logos */}
+                {[...partnerLogos, ...partnerLogos, ...partnerLogos].map((partner, index) => (
+                  <div key={index} className="w-1/3 flex-shrink-0 px-3">
+                    <div className="h-24 rounded-xl bg-white border border-slate-200 p-4 flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+                      <img
+                        src={partner.src}
+                        alt={partner.alt}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop: 6 logos visible */}
+            <div className="hidden lg:block">
+              <div className="flex transition-transform duration-500 ease-in-out"
+                   style={{ transform: `translateX(-${currentPartnerSlide * (100 / 6)}%)` }}>
+                {/* Create infinite loop by duplicating logos */}
+                {[...partnerLogos, ...partnerLogos, ...partnerLogos].map((partner, index) => (
+                  <div key={index} className="w-1/6 flex-shrink-0 px-3">
+                    <div className="h-24 rounded-xl bg-white border border-slate-200 p-4 flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+                      <img
+                        src={partner.src}
+                        alt={partner.alt}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
             
             {/* Navigation Arrows */}
             <button
               onClick={() => setCurrentPartnerSlide((prev) => 
-                prev === 0 ? Math.ceil(partnerLogos.length / 6) - 1 : prev - 1
+                prev === 0 ? partnerLogos.length - 1 : prev - 1
               )}
               className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition z-10"
             >
@@ -552,7 +571,7 @@ export default function Home() {
             </button>
             <button
               onClick={() => setCurrentPartnerSlide((prev) => 
-                (prev + 1) % Math.ceil(partnerLogos.length / 6)
+                (prev + 1) % partnerLogos.length
               )}
               className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition z-10"
             >
@@ -561,7 +580,7 @@ export default function Home() {
             
             {/* Dots Indicator */}
             <div className="flex justify-center mt-6 gap-2">
-              {Array.from({ length: Math.ceil(partnerLogos.length / 6) }).map((_, index) => (
+              {partnerLogos.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentPartnerSlide(index)}

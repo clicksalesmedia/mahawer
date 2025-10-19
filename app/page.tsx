@@ -31,19 +31,6 @@ interface HeroSlider {
   buttonLink?: string;
 }
 
-// TranslateWrapper Component
-const TranslateWrapper = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <motion.div
-      initial={{ translateX: "0%" }}
-      animate={{ translateX: "-100%" }}
-      transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-      className="flex gap-6 px-2"
-    >
-      {children}
-    </motion.div>
-  );
-};
 
 // LogoItems Component
 const LogoItems = () => {
@@ -607,20 +594,17 @@ export default function Home() {
           {/* Infinite Scrolling Partner Logos - Single Row */}
           <div className="overflow-hidden">
             <motion.div
-              className="flex"
-              animate={{ x: [0, "-50%"] }}
-              transition={{ 
-                duration: 40, 
-                repeat: Infinity, 
-                ease: "linear" 
+              className="flex gap-6 whitespace-nowrap"
+              animate={{ x: "-100%" }}
+              transition={{
+                duration: 60,
+                repeat: Infinity,
+                ease: "linear",
               }}
             >
-              <div className="flex gap-6 flex-shrink-0">
-                <LogoItems />
-              </div>
-              <div className="flex gap-6 flex-shrink-0">
-                <LogoItems />
-              </div>
+              {[...Array(4)].map((_, i) => (
+                <LogoItems key={i} />
+              ))}
             </motion.div>
           </div>
         </div>

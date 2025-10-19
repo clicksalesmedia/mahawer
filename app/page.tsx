@@ -39,6 +39,13 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [slidersLoading, setSlidersLoading] = useState(true);
 
+  // Animated counter states
+  const [counters, setCounters] = useState({
+    products: 0,
+    delivery: 0
+  });
+  const [hasAnimated, setHasAnimated] = useState(false);
+
   // Partner logos array
   const partnerLogos = [
     { src: "/partners/Dabg.png", alt: "DABG" },
@@ -123,6 +130,60 @@ export default function Home() {
       return () => clearInterval(interval);
     }
   }, [partnerLogos.length]);
+
+  // Animated counter function
+  const animateCounter = (target: number, key: 'products' | 'delivery', duration: number = 2000) => {
+    const startTime = Date.now();
+    const startValue = 0;
+
+    const updateCounter = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing function for smooth animation
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const currentValue = Math.floor(startValue + (target - startValue) * easeOutQuart);
+
+      setCounters(prev => ({
+        ...prev,
+        [key]: currentValue
+      }));
+
+      if (progress < 1) {
+        requestAnimationFrame(updateCounter);
+      }
+    };
+
+    requestAnimationFrame(updateCounter);
+  };
+
+  // Intersection Observer for stats animation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasAnimated) {
+            setHasAnimated(true);
+            // Animate counters
+            animateCounter(500, 'products', 2000);
+            animateCounter(24, 'delivery', 1500);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    const statsElement = document.getElementById('stats-section');
+    if (statsElement) {
+      observer.observe(statsElement);
+    }
+
+    return () => {
+      if (statsElement) {
+        observer.unobserve(statsElement);
+      }
+    };
+  }, [hasAnimated]);
 
   // Auto-advance carousel for products
   useEffect(() => {
@@ -368,9 +429,9 @@ export default function Home() {
                 </div>
                 
                 {/* Stats */}
-                <div className="mt-8 grid grid-cols-3 gap-6">
+                <div id="stats-section" className="mt-8 grid grid-cols-3 gap-6">
                   <div>
-                    <div className="text-2xl font-bold text-slate-900">500+</div>
+                    <div className="text-2xl font-bold text-slate-900">{counters.products}+</div>
                     <div className="text-sm text-slate-600">منتج متوفر</div>
                   </div>
                   <div>
@@ -378,7 +439,7 @@ export default function Home() {
                     <div className="text-sm text-slate-600">خدمة العملاء</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-slate-900">24</div>
+                    <div className="text-2xl font-bold text-slate-900">{counters.delivery}</div>
                     <div className="text-sm text-slate-600">ساعة للتوصيل</div>
                   </div>
                 </div>
@@ -594,9 +655,9 @@ export default function Home() {
         </div>
       </section>
       {/* FEATURES */}
-      <section id="features" className="py-16">
+      <section id="features" className="py-16 bg-gradient-to-br from-brand-500 to-emerald-500">
         <div className="max-w-7xl mx-auto container-pad">
-          <h2 className="text-2xl font-extrabold mb-10">ما يميّزنا</h2>
+          <h2 className="text-2xl font-extrabold mb-10 text-white">ما يميّزنا</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="rounded-2xl bg-white border border-slate-200 p-6 shadow-soft">
               <div className="flex items-center gap-3 mb-3">

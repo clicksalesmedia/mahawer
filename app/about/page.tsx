@@ -1,10 +1,75 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
 export default function AboutPage() {
+  // Animated counter states
+  const [counters, setCounters] = useState({
+    projects: 0,
+    clients: 0,
+    products: 0,
+    delivery: 0
+  });
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  // Animated counter function
+  const animateCounter = (target: number, key: 'projects' | 'clients' | 'products' | 'delivery', duration: number = 2000) => {
+    const startTime = Date.now();
+    const startValue = 0;
+
+    const updateCounter = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing function for smooth animation
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const currentValue = Math.floor(startValue + (target - startValue) * easeOutQuart);
+
+      setCounters(prev => ({
+        ...prev,
+        [key]: currentValue
+      }));
+
+      if (progress < 1) {
+        requestAnimationFrame(updateCounter);
+      }
+    };
+
+    requestAnimationFrame(updateCounter);
+  };
+
+  // Intersection Observer for stats animation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasAnimated) {
+            setHasAnimated(true);
+            // Animate counters
+            animateCounter(500, 'projects', 2000);
+            animateCounter(200, 'clients', 1800);
+            animateCounter(500, 'products', 2200);
+            animateCounter(24, 'delivery', 1500);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    const statsElement = document.getElementById('about-stats-section');
+    if (statsElement) {
+      observer.observe(statsElement);
+    }
+
+    return () => {
+      if (statsElement) {
+        observer.unobserve(statsElement);
+      }
+    };
+  }, [hasAnimated]);
   return (
     <>
       <Header />
@@ -60,35 +125,35 @@ export default function AboutPage() {
             </div>
             <div className="relative">
               <div className="absolute -inset-6 bg-gradient-to-br from-brand-200/50 to-emerald-200/40 blur-2xl rounded-[2rem] -z-10" />
-              <div className="bg-white rounded-[2rem] p-8 shadow-soft border border-slate-200">
-                <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gradient-to-br from-brand-500 to-emerald-500 rounded-[2rem] p-8 shadow-soft border border-slate-200">
+                <div id="about-stats-section" className="grid grid-cols-2 gap-6">
                   <div className="text-center">
-                    <div className="h-16 w-16 mx-auto mb-3 rounded-2xl bg-brand-100 flex items-center justify-center">
+                    <div className="h-16 w-16 mx-auto mb-3 rounded-2xl bg-white/20 flex items-center justify-center">
                       <span className="text-2xl">🏗️</span>
                     </div>
-                    <div className="text-2xl font-bold text-slate-900">500+</div>
-                    <div className="text-sm text-slate-500">مشروع مكتمل</div>
+                    <div className="text-2xl font-bold text-white">{counters.projects}+</div>
+                    <div className="text-sm text-white/80">مشروع مكتمل</div>
                   </div>
                   <div className="text-center">
-                    <div className="h-16 w-16 mx-auto mb-3 rounded-2xl bg-emerald-100 flex items-center justify-center">
+                    <div className="h-16 w-16 mx-auto mb-3 rounded-2xl bg-white/20 flex items-center justify-center">
                       <span className="text-2xl">👥</span>
                     </div>
-                    <div className="text-2xl font-bold text-slate-900">200+</div>
-                    <div className="text-sm text-slate-500">عميل راضي</div>
+                    <div className="text-2xl font-bold text-white">{counters.clients}+</div>
+                    <div className="text-sm text-white/80">عميل راضي</div>
                   </div>
                   <div className="text-center">
-                    <div className="h-16 w-16 mx-auto mb-3 rounded-2xl bg-purple-100 flex items-center justify-center">
+                    <div className="h-16 w-16 mx-auto mb-3 rounded-2xl bg-white/20 flex items-center justify-center">
                       <span className="text-2xl">📦</span>
                     </div>
-                    <div className="text-2xl font-bold text-slate-900">500+</div>
-                    <div className="text-sm text-slate-500">منتج متوفر</div>
+                    <div className="text-2xl font-bold text-white">{counters.products}+</div>
+                    <div className="text-sm text-white/80">منتج متوفر</div>
                   </div>
                   <div className="text-center">
-                    <div className="h-16 w-16 mx-auto mb-3 rounded-2xl bg-yellow-100 flex items-center justify-center">
+                    <div className="h-16 w-16 mx-auto mb-3 rounded-2xl bg-white/20 flex items-center justify-center">
                       <span className="text-2xl">🚚</span>
                     </div>
-                    <div className="text-2xl font-bold text-slate-900">24</div>
-                    <div className="text-sm text-slate-500">ساعة توصيل</div>
+                    <div className="text-2xl font-bold text-white">{counters.delivery}</div>
+                    <div className="text-sm text-white/80">ساعة توصيل</div>
                   </div>
                 </div>
               </div>

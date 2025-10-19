@@ -571,19 +571,22 @@ export default function Home() {
             نقدّم لكم أفضل <span className="text-brand-700">العلامات التجارية</span>
           </h2>
           
-          {/* Infinite Scrolling Partner Logos */}
-          <div className="overflow-hidden">
-            {/* First Row - Left to Right */}
-            <div className="flex overflow-hidden mb-4">
+          {/* Infinite Scrolling Partner Logos - Single Row */}
+          <div className="relative w-full overflow-hidden">
+            <div className="flex">
               <motion.div
-                initial={{ translateX: "0%" }}
-                animate={{ translateX: "-100%" }}
-                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                className="flex gap-4 px-2 flex-shrink-0"
+                animate={{ x: ["0%", "-100%"] }}
+                transition={{ 
+                  duration: 40, 
+                  repeat: Infinity, 
+                  ease: "linear",
+                  repeatType: "loop"
+                }}
+                className="flex gap-6 flex-shrink-0"
               >
                 {partnerLogos.map((partner, index) => (
-                  <div key={index} className="w-24 md:w-32 h-16 md:h-20 flex-shrink-0">
-                    <div className="w-full h-full rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+                  <div key={`set1-${index}`} className="w-32 md:w-40 h-20 md:h-24 flex-shrink-0">
+                    <div className="w-full h-full rounded-xl bg-white border border-slate-200 p-4 flex items-center justify-center hover:shadow-xl transition-all duration-300 hover:scale-110">
                       <img
                         src={partner.src}
                         alt={partner.alt}
@@ -594,90 +597,18 @@ export default function Home() {
                 ))}
               </motion.div>
               <motion.div
-                initial={{ translateX: "0%" }}
-                animate={{ translateX: "-100%" }}
-                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                className="flex gap-4 px-2 flex-shrink-0"
+                animate={{ x: ["0%", "-100%"] }}
+                transition={{ 
+                  duration: 40, 
+                  repeat: Infinity, 
+                  ease: "linear",
+                  repeatType: "loop"
+                }}
+                className="flex gap-6 flex-shrink-0"
               >
                 {partnerLogos.map((partner, index) => (
-                  <div key={`duplicate-${index}`} className="w-24 md:w-32 h-16 md:h-20 flex-shrink-0">
-                    <div className="w-full h-full rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-105">
-                      <img
-                        src={partner.src}
-                        alt={partner.alt}
-                        className="max-h-full max-w-full object-contain"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </motion.div>
-              <motion.div
-                initial={{ translateX: "0%" }}
-                animate={{ translateX: "-100%" }}
-                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                className="flex gap-4 px-2 flex-shrink-0"
-              >
-                {partnerLogos.map((partner, index) => (
-                  <div key={`duplicate2-${index}`} className="w-24 md:w-32 h-16 md:h-20 flex-shrink-0">
-                    <div className="w-full h-full rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-105">
-                      <img
-                        src={partner.src}
-                        alt={partner.alt}
-                        className="max-h-full max-w-full object-contain"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </motion.div>
-            </div>
-
-            {/* Second Row - Right to Left */}
-            <div className="flex overflow-hidden">
-              <motion.div
-                initial={{ translateX: "-100%" }}
-                animate={{ translateX: "0%" }}
-                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                className="flex gap-4 px-2 flex-shrink-0"
-              >
-                {partnerLogos.slice().reverse().map((partner, index) => (
-                  <div key={`reverse-${index}`} className="w-24 md:w-32 h-16 md:h-20 flex-shrink-0">
-                    <div className="w-full h-full rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-105">
-                      <img
-                        src={partner.src}
-                        alt={partner.alt}
-                        className="max-h-full max-w-full object-contain"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </motion.div>
-              <motion.div
-                initial={{ translateX: "-100%" }}
-                animate={{ translateX: "0%" }}
-                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                className="flex gap-4 px-2 flex-shrink-0"
-              >
-                {partnerLogos.slice().reverse().map((partner, index) => (
-                  <div key={`reverse-duplicate-${index}`} className="w-24 md:w-32 h-16 md:h-20 flex-shrink-0">
-                    <div className="w-full h-full rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-105">
-                      <img
-                        src={partner.src}
-                        alt={partner.alt}
-                        className="max-h-full max-w-full object-contain"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </motion.div>
-              <motion.div
-                initial={{ translateX: "-100%" }}
-                animate={{ translateX: "0%" }}
-                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                className="flex gap-4 px-2 flex-shrink-0"
-              >
-                {partnerLogos.slice().reverse().map((partner, index) => (
-                  <div key={`reverse-duplicate2-${index}`} className="w-24 md:w-32 h-16 md:h-20 flex-shrink-0">
-                    <div className="w-full h-full rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+                  <div key={`set2-${index}`} className="w-32 md:w-40 h-20 md:h-24 flex-shrink-0">
+                    <div className="w-full h-full rounded-xl bg-white border border-slate-200 p-4 flex items-center justify-center hover:shadow-xl transition-all duration-300 hover:scale-110">
                       <img
                         src={partner.src}
                         alt={partner.alt}

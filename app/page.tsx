@@ -606,17 +606,22 @@ export default function Home() {
           
           {/* Infinite Scrolling Partner Logos - Single Row */}
           <div className="overflow-hidden">
-            <div className="flex">
-              <TranslateWrapper>
+            <motion.div
+              className="flex"
+              animate={{ x: [0, "-50%"] }}
+              transition={{ 
+                duration: 40, 
+                repeat: Infinity, 
+                ease: "linear" 
+              }}
+            >
+              <div className="flex gap-6 flex-shrink-0">
                 <LogoItems />
-              </TranslateWrapper>
-              <TranslateWrapper>
+              </div>
+              <div className="flex gap-6 flex-shrink-0">
                 <LogoItems />
-              </TranslateWrapper>
-              <TranslateWrapper>
-                <LogoItems />
-              </TranslateWrapper>
-            </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>

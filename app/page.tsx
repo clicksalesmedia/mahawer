@@ -117,7 +117,7 @@ export default function Home() {
   useEffect(() => {
     if (partnerLogos.length > 0) {
       const interval = setInterval(() => {
-        setCurrentPartnerSlide((prev) => (prev + 1) % partnerLogos.length);
+        setCurrentPartnerSlide((prev) => (prev + 1) % (partnerLogos.length * 2));
       }, 3000); // Change slide every 3 seconds
 
       return () => clearInterval(interval);
@@ -522,12 +522,12 @@ export default function Home() {
           
           {/* Partner Logos Carousel */}
           <div className="relative overflow-hidden">
-            {/* Mobile: 3 logos visible */}
+            {/* Mobile: 3 logos visible, slide one at a time */}
             <div className="block lg:hidden">
               <div className="flex transition-transform duration-500 ease-in-out"
                    style={{ transform: `translateX(-${currentPartnerSlide * (100 / 3)}%)` }}>
-                {/* Create infinite loop by duplicating logos */}
-                {[...partnerLogos, ...partnerLogos, ...partnerLogos].map((partner, index) => (
+                {/* Create seamless infinite loop by duplicating logos twice */}
+                {[...partnerLogos, ...partnerLogos].map((partner, index) => (
                   <div key={index} className="w-1/3 flex-shrink-0 px-3">
                     <div className="h-24 rounded-xl bg-white border border-slate-200 p-4 flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-105">
                       <img
@@ -541,12 +541,12 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Desktop: 6 logos visible */}
+            {/* Desktop: 6 logos visible, slide one at a time */}
             <div className="hidden lg:block">
               <div className="flex transition-transform duration-500 ease-in-out"
                    style={{ transform: `translateX(-${currentPartnerSlide * (100 / 6)}%)` }}>
-                {/* Create infinite loop by duplicating logos */}
-                {[...partnerLogos, ...partnerLogos, ...partnerLogos].map((partner, index) => (
+                {/* Create seamless infinite loop by duplicating logos twice */}
+                {[...partnerLogos, ...partnerLogos].map((partner, index) => (
                   <div key={index} className="w-1/6 flex-shrink-0 px-3">
                     <div className="h-24 rounded-xl bg-white border border-slate-200 p-4 flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-105">
                       <img
@@ -563,7 +563,7 @@ export default function Home() {
             {/* Navigation Arrows */}
             <button
               onClick={() => setCurrentPartnerSlide((prev) => 
-                prev === 0 ? partnerLogos.length - 1 : prev - 1
+                prev === 0 ? (partnerLogos.length * 2) - 1 : prev - 1
               )}
               className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition z-10"
             >
@@ -571,7 +571,7 @@ export default function Home() {
             </button>
             <button
               onClick={() => setCurrentPartnerSlide((prev) => 
-                (prev + 1) % partnerLogos.length
+                (prev + 1) % (partnerLogos.length * 2)
               )}
               className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition z-10"
             >
@@ -585,7 +585,7 @@ export default function Home() {
                   key={index}
                   onClick={() => setCurrentPartnerSlide(index)}
                   className={`w-2 h-2 rounded-full transition ${
-                    index === currentPartnerSlide ? 'bg-brand-600' : 'bg-slate-300'
+                    index === currentPartnerSlide % partnerLogos.length ? 'bg-brand-600' : 'bg-slate-300'
                   }`}
                 />
               ))}

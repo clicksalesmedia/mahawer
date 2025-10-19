@@ -35,8 +35,24 @@ export default function Home() {
   const [heroSliders, setHeroSliders] = useState<HeroSlider[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentSliderSlide, setCurrentSliderSlide] = useState(0);
+  const [currentPartnerSlide, setCurrentPartnerSlide] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [slidersLoading, setSlidersLoading] = useState(true);
+
+  // Partner logos array
+  const partnerLogos = [
+    { src: "/partners/Dabg.png", alt: "DABG" },
+    { src: "/partners/Logo_Sika_AG.svg.png", alt: "Sika" },
+    { src: "/partners/SABIC_Logo_RGB_PNG_tcm12-2093.png", alt: "SABIC" },
+    { src: "/partners/weber-saint-gobain4363.jpg", alt: "Weber Saint Gobain" },
+    { src: "/partners/Kimmco isover new logo.png", alt: "Kimmco Isover" },
+    { src: "/partners/al-ittefaq-logo.jpg", alt: "Al Ittefaq" },
+    { src: "/partners/شركة-الجزيرة-للمنتجات-الحديدية.jpg", alt: "شركة الجزيرة للمنتجات الحديدية" },
+    { src: "/partners/شعار-سافيتو-1-qurs6pflxqxtwruduw2kp2jyxsl3iz55y6tm7bvsuo.jpg", alt: "سافيتو" },
+    { src: "/partners/images.png", alt: "Partner" },
+    { src: "/partners/about.png", alt: "Partner" },
+    { src: "/partners/9b6ffac5-5eb3-415a-9d5c-16c1746384c6_16x9_1200x676.webp", alt: "Partner" }
+  ];
 
   // Fetch featured products on component mount
   useEffect(() => {
@@ -96,6 +112,17 @@ export default function Home() {
       return () => clearInterval(interval);
     }
   }, [heroSliders.length]);
+
+  // Auto-advance partner carousel
+  useEffect(() => {
+    if (partnerLogos.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentPartnerSlide((prev) => (prev + 1) % Math.ceil(partnerLogos.length / 6));
+      }, 3000); // Change slide every 3 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [partnerLogos.length]);
 
   // Auto-advance carousel for products
   useEffect(() => {
@@ -492,84 +519,57 @@ export default function Home() {
           <h2 className="text-2xl font-extrabold mb-8">
             نقدّم لكم أفضل <span className="text-brand-700">العلامات التجارية</span>
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {/* Partner Logos */}
-            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
-              <img
-                src="/partners/Dabg.png"
-                alt="DABG"
-                className="max-h-full max-w-full object-contain"
-              />
+          
+          {/* Partner Logos Carousel */}
+          <div className="relative overflow-hidden">
+            <div className="flex transition-transform duration-500 ease-in-out"
+                 style={{ transform: `translateX(-${currentPartnerSlide * 100}%)` }}>
+              {Array.from({ length: Math.ceil(partnerLogos.length / 6) }).map((_, slideIndex) => (
+                <div key={slideIndex} className="w-full flex-shrink-0">
+                  <div className="grid grid-cols-3 lg:grid-cols-6 gap-6">
+                    {partnerLogos.slice(slideIndex * 6, slideIndex * 6 + 6).map((partner, index) => (
+                      <div key={index} className="h-24 rounded-xl bg-white border border-slate-200 p-4 flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+                        <img
+                          src={partner.src}
+                          alt={partner.alt}
+                          className="max-h-full max-w-full object-contain"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
-              <img
-                src="/partners/Logo_Sika_AG.svg.png"
-                alt="Sika"
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
-              <img
-                src="/partners/SABIC_Logo_RGB_PNG_tcm12-2093.png"
-                alt="SABIC"
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
-              <img
-                src="/partners/weber-saint-gobain4363.jpg"
-                alt="Weber Saint Gobain"
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
-              <img
-                src="/partners/Kimmco isover new logo.png"
-                alt="Kimmco Isover"
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
-              <img
-                src="/partners/al-ittefaq-logo.jpg"
-                alt="Al Ittefaq"
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
-              <img
-                src="/partners/شركة-الجزيرة-للمنتجات-الحديدية.jpg"
-                alt="شركة الجزيرة للمنتجات الحديدية"
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
-              <img
-                src="/partners/شعار-سافيتو-1-qurs6pflxqxtwruduw2kp2jyxsl3iz55y6tm7bvsuo.jpg"
-                alt="سافيتو"
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
-              <img
-                src="/partners/images.png"
-                alt="Partner"
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
-              <img
-                src="/partners/about.png"
-                alt="Partner"
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-            <div className="h-16 rounded-xl bg-white border border-slate-200 p-3 flex items-center justify-center hover:shadow-md transition">
-              <img
-                src="/partners/9b6ffac5-5eb3-415a-9d5c-16c1746384c6_16x9_1200x676.webp"
-                alt="Partner"
-                className="max-h-full max-w-full object-contain"
-              />
+            
+            {/* Navigation Arrows */}
+            <button
+              onClick={() => setCurrentPartnerSlide((prev) => 
+                prev === 0 ? Math.ceil(partnerLogos.length / 6) - 1 : prev - 1
+              )}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition z-10"
+            >
+              ←
+            </button>
+            <button
+              onClick={() => setCurrentPartnerSlide((prev) => 
+                (prev + 1) % Math.ceil(partnerLogos.length / 6)
+              )}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition z-10"
+            >
+              →
+            </button>
+            
+            {/* Dots Indicator */}
+            <div className="flex justify-center mt-6 gap-2">
+              {Array.from({ length: Math.ceil(partnerLogos.length / 6) }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentPartnerSlide(index)}
+                  className={`w-2 h-2 rounded-full transition ${
+                    index === currentPartnerSlide ? 'bg-brand-600' : 'bg-slate-300'
+                  }`}
+                />
+              ))}
             </div>
           </div>
         </div>

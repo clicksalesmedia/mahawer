@@ -146,6 +146,7 @@ model HeroSlider {
   title       String   // Slider title
   description String?  // Slider description
   image       String   // Image URL
+  category    String?  // Optional category
   isActive    Boolean  @default(true)
   order       Int      @default(0) // Display order
   buttonText  String?  // Optional button text

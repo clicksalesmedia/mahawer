@@ -20,16 +20,6 @@ interface Product {
   isCashImport: boolean;
 }
 
-interface HeroSlider {
-  id: string;
-  title: string;
-  description?: string;
-  image: string;
-  isActive: boolean;
-  order: number;
-  buttonText?: string;
-  buttonLink?: string;
-}
 
 
 // LogoItems Component
@@ -67,11 +57,8 @@ const LogoItems = () => {
 
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
-  const [heroSliders, setHeroSliders] = useState<HeroSlider[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [currentSliderSlide, setCurrentSliderSlide] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [slidersLoading, setSlidersLoading] = useState(true);
 
   // Animated counter states
   const [counters, setCounters] = useState({
@@ -107,38 +94,6 @@ export default function Home() {
     fetchFeaturedProducts();
   }, []);
 
-  // Fetch hero sliders
-  useEffect(() => {
-    const fetchHeroSliders = async () => {
-      try {
-        const response = await fetch('/api/sliders');
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Fetched sliders data:', data);
-          setHeroSliders(data);
-        } else {
-          console.error('Failed to fetch sliders:', response.status, response.statusText);
-        }
-      } catch (error) {
-        console.error('Error fetching hero sliders:', error);
-      } finally {
-        setSlidersLoading(false);
-      }
-    };
-
-    fetchHeroSliders();
-  }, []);
-
-  // Auto-advance hero slider
-  useEffect(() => {
-    if (heroSliders.length > 1) {
-      const interval = setInterval(() => {
-        setCurrentSliderSlide((prev) => (prev + 1) % heroSliders.length);
-      }, 5000); // Change slide every 5 seconds
-
-      return () => clearInterval(interval);
-    }
-  }, [heroSliders.length]);
 
 
   // Animated counter function
@@ -223,135 +178,6 @@ export default function Home() {
     <>
       <Header />
       
-      {/* HERO SLIDER SECTION */}
-      {heroSliders.length > 0 ? (
-        <section className="relative h-[60vh] overflow-hidden">
-          <div className="relative w-full h-full">
-            {heroSliders.map((slider, index) => (
-              <div 
-                key={slider.id} 
-                className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ${
-                  index === currentSliderSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
-                }`}
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/30 z-10" />
-                <img
-                  src={slider.image}
-                  alt={slider.title}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    console.log('Slider image failed to load:', slider.image);
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    const parent = target.parentElement;
-                    if (parent) {
-                      parent.innerHTML = `<div class="w-full h-full bg-gradient-to-r from-brand-500 to-emerald-500 flex items-center justify-center"><span class="text-white text-6xl">🏗️</span></div>`;
-                    }
-                  }}
-                />
-                
-                {/* Slider Content Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center z-20">
-                  <div className="text-center text-white max-w-4xl mx-auto px-6">
-                    <h1 className="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
-                      {slider.title}
-                    </h1>
-                    {slider.description && (
-                      <p className="text-lg md:text-xl mb-8 text-white/90 max-w-2xl mx-auto">
-                        {slider.description}
-                      </p>
-                    )}
-                    {slider.buttonText && slider.buttonLink && (
-                      <a
-                        href={slider.buttonLink}
-                        className="inline-block bg-white text-slate-900 hover:bg-slate-100 px-8 py-4 rounded-xl text-lg font-semibold shadow-lg transition transform hover:scale-105"
-                      >
-                        {slider.buttonText}
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-            
-            {/* Slider Navigation */}
-            {heroSliders.length > 1 && (
-              <>
-                <button
-                  onClick={() => setCurrentSliderSlide((prev) => (prev - 1 + heroSliders.length) % heroSliders.length)}
-                  className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white text-xl backdrop-blur transition z-30"
-                >
-                  ←
-                </button>
-                <button
-                  onClick={() => setCurrentSliderSlide((prev) => (prev + 1) % heroSliders.length)}
-                  className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white text-xl backdrop-blur transition z-30"
-                >
-                  →
-                </button>
-                
-                {/* Slider Dots */}
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-30">
-                  {heroSliders.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentSliderSlide(index)}
-                      className={`w-3 h-3 rounded-full transition ${
-                        index === currentSliderSlide ? 'bg-white' : 'bg-white/50'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
-        </section>
-      ) : (
-        /* Placeholder when no sliders available */
-        <section className="relative h-[60vh] overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200">
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-500/10 via-transparent to-emerald-500/10" />
-          <div className="relative w-full h-full flex items-center justify-center">
-            <div className="text-center max-w-2xl mx-auto px-6">
-              <div className="mb-8">
-                <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-brand-100 to-emerald-100 flex items-center justify-center">
-                  <span className="text-4xl">🎨</span>
-                </div>
-              </div>
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-4 text-slate-800 leading-tight">
-                لا توجد شرائح متاحة حالياً
-              </h1>
-              <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-                سيتم عرض الشرائح المميزة هنا بمجرد إضافتها من لوحة التحكم
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button
-                  onClick={() => {
-                    const phoneNumber = "966550844033";
-                    const message = encodeURIComponent("مرحباً، أود طلب عرض سعر لمواد البناء");
-                    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
-                    window.open(whatsappUrl, "_blank");
-                  }}
-                  className="px-8 py-4 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-semibold shadow-lg transition transform hover:scale-105"
-                >
-                  اطلب عرض سعر الآن
-                </button>
-                <Link
-                  href="/catalogue"
-                  className="px-8 py-4 border-2 border-slate-300 hover:border-brand-500 hover:text-brand-700 text-slate-700 rounded-xl font-semibold transition"
-                >
-                  تصفح الكتالوج
-                </Link>
-              </div>
-            </div>
-          </div>
-          
-          {/* Decorative Elements */}
-          <div className="absolute top-8 left-8 w-16 h-16 bg-brand-200/30 rounded-full blur-xl" />
-          <div className="absolute bottom-8 right-8 w-20 h-20 bg-emerald-200/30 rounded-full blur-xl" />
-          <div className="absolute top-1/2 left-4 w-2 h-2 bg-brand-400 rounded-full animate-pulse" />
-          <div className="absolute top-1/3 right-6 w-3 h-3 bg-emerald-400 rounded-full animate-pulse delay-1000" />
-        </section>
-      )}
 
       {/* HERO */}
       <section className="relative overflow-hidden min-h-[90vh] flex items-center">

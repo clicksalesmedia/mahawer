@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
+import { authOptions } from "../../../lib/authOptions";
 
 const prisma = new PrismaClient();
 
@@ -24,7 +25,7 @@ export async function GET() {
 // POST - Create new slider
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     
     if (!session) {
       return NextResponse.json(
@@ -59,8 +60,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(slider, { status: 201 });
   } catch (error) {
     console.error('Error creating slider:', error);
+    
+    // More detailed error logging
+    if (error instanceof Error) {
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to create slider' },
+      { 
+        error: 'Failed to create slider',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }

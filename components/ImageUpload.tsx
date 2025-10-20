@@ -46,7 +46,9 @@ export default function ImageUpload({
         onUpload(data.url);
       } else {
         const error = await response.json();
-        alert(`خطأ في رفع الصورة: ${error.error}`);
+        console.error('Upload error response:', error);
+        const errorMessage = error.details || error.error || 'حدث خطأ غير معروف';
+        alert(`خطأ في رفع الصورة: ${errorMessage}`);
         setPreview(currentImage || null);
       }
     } catch (error) {

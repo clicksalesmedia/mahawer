@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import { existsSync } from "fs";
-import path from "path";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
+import { v2 as cloudinary } from 'cloudinary';
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(request: NextRequest) {
-  console.log('=== Upload API called ===');
+  console.log('=== Cloudinary Upload API called ===');
   
   try {
     // Check authentication
@@ -21,30 +26,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if we're on Vercel
-    const isVercel = process.env.VERCEL === '1' || process.env.VERCEL_ENV;
-    console.log('Environment - Vercel:', isVercel);
-    
-    if (isVercel) {
-      // On Vercel, suggest using external URLs instead
-      console.log('Vercel detected - file upload not supported');
+    // Check Cloudinary configuration
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+      console.error('Cloudinary configuration missing');
       return NextResponse.json(
         { 
-          error: 'File upload not supported on Vercel',
-          details: 'This application is running on Vercel which has a read-only file system.',
-          suggestion: 'Please use direct image URLs instead. You can use images from the catalogue folder or external URLs.',
-          availableImages: [
-            '/catalogue/Sikaflex Construction.webp',
-            '/catalogue/steel_mesh.png', 
-            '/catalogue/Rock wool.jpg',
-            '/catalogue/Aluminum flashing.jpg',
-            '/catalogue/Ceramic fiber.jpg',
-            '/sliders/slider1.webp',
-            '/sliders/slider2.png',
-            '/sliders/slider3.jpg'
-          ]
+          error: 'Cloudinary not configured',
+          details: 'Missing Cloudinary environment variables. Please check CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET.',
+          suggestion: 'Add Cloudinary credentials to your environment variables.'
         },
-        { status: 400 }
+        { status: 500 }
       );
     }
 
@@ -73,14 +64,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    // Validate file size (max 10MB for Cloudinary)
+    const maxSize = 10 * 1024 * 1024; // 10MB
     console.log('File size:', file.size, 'Max size:', maxSize);
     
     if (file.size > maxSize) {
       console.log('File too large');
       return NextResponse.json(
-        { error: 'File too large. Maximum size is 5MB.' },
+        { error: 'File too large. Maximum size is 10MB.' },
         { status: 400 }
       );
     }
@@ -90,68 +81,60 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(bytes);
     console.log('Buffer created, size:', buffer.length);
 
-    // Generate unique filename
-    const timestamp = Date.now();
-    const fileExtension = path.extname(file.name);
-    const fileName = `${timestamp}-${Math.random().toString(36).substring(2)}${fileExtension}`;
-    console.log('Generated filename:', fileName);
-
-    // Force local directory usage
-    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
-    const filePath = path.join(uploadsDir, fileName);
-    const fileUrl = `/uploads/${fileName}`;
+    // Upload to Cloudinary
+    console.log('Uploading to Cloudinary...');
     
-    console.log('Environment check:');
-    console.log('- CWD:', process.cwd());
-    console.log('- Upload directory:', uploadsDir);
-    console.log('- File path:', filePath);
-    console.log('- VERCEL env:', process.env.VERCEL);
-
-    // Create uploads directory if it doesn't exist
     try {
-      if (!existsSync(uploadsDir)) {
-        console.log('Creating uploads directory...');
-        await mkdir(uploadsDir, { recursive: true });
-        console.log('Directory created successfully');
-      } else {
-        console.log('Directory already exists');
-      }
-    } catch (mkdirError) {
-      console.error('Failed to create directory:', mkdirError);
+      const uploadResult = await new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream(
+          {
+            folder: 'mahawer-sliders', // Organize uploads in a folder
+            resource_type: 'image',
+            transformation: [
+              { width: 1920, height: 1080, crop: 'limit' }, // Limit max size
+              { quality: 'auto' }, // Auto optimize quality
+              { format: 'auto' } // Auto choose best format
+            ]
+          },
+          (error, result) => {
+            if (error) {
+              console.error('Cloudinary upload error:', error);
+              reject(error);
+            } else {
+              console.log('Cloudinary upload success:', result?.public_id);
+              resolve(result);
+            }
+          }
+        ).end(buffer);
+      });
+
+      const result = uploadResult as any;
+      
+      const response = {
+        success: true,
+        url: result.secure_url,
+        public_id: result.public_id,
+        filename: result.original_filename || file.name,
+        width: result.width,
+        height: result.height,
+        format: result.format,
+        bytes: result.bytes
+      };
+      
+      console.log('Upload successful:', response.public_id);
+      return NextResponse.json(response);
+
+    } catch (cloudinaryError) {
+      console.error('Cloudinary upload failed:', cloudinaryError);
       return NextResponse.json(
         { 
-          error: 'Cannot create uploads directory',
-          details: `Failed to create ${uploadsDir}: ${mkdirError instanceof Error ? mkdirError.message : 'Unknown error'}`,
-          suggestion: 'Make sure the application has write permissions to the project directory'
+          error: 'Failed to upload to Cloudinary',
+          details: cloudinaryError instanceof Error ? cloudinaryError.message : 'Unknown Cloudinary error',
+          suggestion: 'Please check your Cloudinary configuration and try again.'
         },
         { status: 500 }
       );
     }
-
-    // Write file to disk
-    try {
-      await writeFile(filePath, buffer);
-      console.log('File written successfully to:', filePath);
-    } catch (writeError) {
-      console.error('Failed to write file:', writeError);
-      return NextResponse.json(
-        { 
-          error: 'Cannot write file',
-          details: `Failed to write ${filePath}: ${writeError instanceof Error ? writeError.message : 'Unknown error'}`,
-          suggestion: 'Make sure the uploads directory has write permissions'
-        },
-        { status: 500 }
-      );
-    }
-
-    const response = {
-      success: true,
-      url: fileUrl,
-      filename: fileName
-    };
-    
-    console.log('Sending response:', response);
-    return NextResponse.json(response);
 
   } catch (error) {
     console.error('=== Upload Error ===');

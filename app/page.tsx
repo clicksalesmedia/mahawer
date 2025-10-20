@@ -20,6 +20,18 @@ interface Product {
   isCashImport: boolean;
 }
 
+interface HeroSlider {
+  id: string;
+  title: string;
+  description?: string;
+  image: string;
+  category?: string;
+  isActive: boolean;
+  order: number;
+  buttonText?: string;
+  buttonLink?: string;
+}
+
 
 
 
@@ -58,8 +70,10 @@ const LogoItems = () => {
 
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [heroSliders, setHeroSliders] = useState<HeroSlider[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [slidersLoading, setSlidersLoading] = useState(true);
 
   // Animated counter states
   const [counters, setCounters] = useState({
@@ -93,6 +107,28 @@ export default function Home() {
     };
 
     fetchFeaturedProducts();
+  }, []);
+
+  // Fetch hero sliders
+  useEffect(() => {
+    const fetchHeroSliders = async () => {
+      try {
+        const response = await fetch('/api/sliders');
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Fetched sliders data:', data);
+          setHeroSliders(data);
+        } else {
+          console.error('Failed to fetch sliders:', response.status, response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching hero sliders:', error);
+      } finally {
+        setSlidersLoading(false);
+      }
+    };
+
+    fetchHeroSliders();
   }, []);
 
 
@@ -152,28 +188,28 @@ export default function Home() {
     };
   }, [hasAnimated]);
 
-  // Auto-advance carousel for products
+  // Auto-advance carousel for hero sliders
   useEffect(() => {
-    if (featuredProducts.length > 0) {
-      console.log('Starting carousel with', featuredProducts.length, 'products');
+    if (heroSliders.length > 1) {
+      console.log('Starting hero slider carousel with', heroSliders.length, 'sliders');
       const interval = setInterval(() => {
         setCurrentSlide((prev) => {
-          const newSlide = (prev + 1) % featuredProducts.length;
-          console.log('Advancing slide from', prev, 'to', newSlide);
+          const newSlide = (prev + 1) % heroSliders.length;
+          console.log('Advancing slider from', prev, 'to', newSlide);
           return newSlide;
         });
-      }, 4000); // Change slide every 4 seconds
+      }, 5000); // Change slide every 5 seconds
 
       return () => clearInterval(interval);
     }
-  }, [featuredProducts.length]);
+  }, [heroSliders.length]);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % featuredProducts.length);
+    setCurrentSlide((prev) => (prev + 1) % heroSliders.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + featuredProducts.length) % featuredProducts.length);
+    setCurrentSlide((prev) => (prev - 1 + heroSliders.length) % heroSliders.length);
   };
 
   return (
@@ -335,60 +371,62 @@ export default function Home() {
                 {/* Main Carousel Container */}
                 <div className="relative bg-white rounded-3xl p-6 shadow-2xl border border-slate-200">
                   <div className="relative h-96 overflow-hidden rounded-2xl">
-                    {isLoading ? (
+                    {slidersLoading ? (
                       <div className="flex items-center justify-center h-full bg-slate-100 animate-pulse">
                         <div className="text-4xl">⏳</div>
                       </div>
-                    ) : featuredProducts.length > 0 ? (
+                    ) : heroSliders.length > 0 ? (
                       <>
                         {/* Carousel Slides */}
                         <div className="relative w-full h-full">
-                          {featuredProducts.map((product, index) => (
+                          {heroSliders.map((slider, index) => (
                             <div 
-                              key={product.id} 
+                              key={slider.id} 
                               className={`absolute inset-0 w-full h-full transition-opacity duration-500 ${
                                 index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
                               }`}
                             >
                               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
-                              {product.images && product.images.length > 0 ? (
-                                <img
-                                  src={product.images[0]}
-                                  alt={product.nameAr}
-                                  className="w-full h-full object-cover"
-                                  onError={(e) => {
-                                    console.log('Image failed to load:', product.images[0]);
-                                    const target = e.target as HTMLImageElement;
-                                    target.style.display = 'none';
-                                    const parent = target.parentElement;
-                                    if (parent) {
-                                      parent.innerHTML = `<div class="w-full h-full bg-slate-100 flex items-center justify-center"><span class="text-6xl">${product.category.emoji || '📦'}</span></div>`;
-                                    }
-                                  }}
-                                />
-                              ) : (
-                                <div className="w-full h-full bg-slate-100 flex items-center justify-center">
-                                  <span className="text-6xl">{product.category.emoji || '📦'}</span>
-                                </div>
-                              )}
+                              <img
+                                src={slider.image}
+                                alt={slider.title}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  console.log('Slider image failed to load:', slider.image);
+                                  const target = e.target as HTMLImageElement;
+                                  target.style.display = 'none';
+                                  const parent = target.parentElement;
+                                  if (parent) {
+                                    parent.innerHTML = `<div class="w-full h-full bg-gradient-to-r from-brand-500 to-emerald-500 flex items-center justify-center"><span class="text-white text-6xl">🏗️</span></div>`;
+                                  }
+                                }}
+                              />
                               
-                              {/* Product Info Overlay */}
+                              {/* Slider Info Overlay */}
                               <div className="absolute bottom-0 left-0 right-0 p-6 text-white z-20">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <span className="text-2xl">{product.category.emoji}</span>
-                                  <span className="text-sm bg-white/20 px-2 py-1 rounded-full backdrop-blur">
-                                    {product.category.nameAr}
-                                  </span>
-                                  {product.isCashImport && (
-                                    <span className="text-xs bg-amber-500 px-2 py-1 rounded-full">
-                                      استيراد نقدي
+                                {slider.category && (
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <span className="text-sm bg-white/20 px-2 py-1 rounded-full backdrop-blur">
+                                      {slider.category}
                                     </span>
-                                  )}
-                                </div>
-                                <h3 className="text-xl font-bold mb-1">{product.nameAr}</h3>
-                                <p className="text-sm text-white/90 line-clamp-2">
-                                  {product.descriptionAr || product.descriptionEn}
-                                </p>
+                                  </div>
+                                )}
+                                <h3 className="text-xl font-bold mb-1">{slider.title}</h3>
+                                {slider.description && (
+                                  <p className="text-sm text-white/90 line-clamp-2">
+                                    {slider.description}
+                                  </p>
+                                )}
+                                {slider.buttonText && slider.buttonLink && (
+                                  <div className="mt-3">
+                                    <a
+                                      href={slider.buttonLink}
+                                      className="inline-block bg-white/20 hover:bg-white/30 backdrop-blur px-4 py-2 rounded-lg text-sm font-medium transition"
+                                    >
+                                      {slider.buttonText}
+                                    </a>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           ))}
@@ -396,13 +434,13 @@ export default function Home() {
 
                         {/* Navigation Arrows */}
                         <button
-                          onClick={prevSlide}
+                          onClick={() => setCurrentSlide((prev) => (prev - 1 + heroSliders.length) % heroSliders.length)}
                           className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition z-30"
                         >
                           ←
                         </button>
                         <button
-                          onClick={nextSlide}
+                          onClick={() => setCurrentSlide((prev) => (prev + 1) % heroSliders.length)}
                           className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition z-30"
                         >
                           →
@@ -410,7 +448,7 @@ export default function Home() {
 
                         {/* Dots Indicator */}
                         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-30">
-                          {featuredProducts.map((_, index) => (
+                          {heroSliders.map((_, index) => (
                             <button
                               key={index}
                               onClick={() => setCurrentSlide(index)}
@@ -424,8 +462,8 @@ export default function Home() {
                     ) : (
                       <div className="flex items-center justify-center h-full bg-slate-100">
                         <div className="text-center">
-                          <div className="text-4xl mb-2">📦</div>
-                          <p className="text-slate-600">لا توجد منتجات متاحة</p>
+                          <div className="text-4xl mb-2">🎯</div>
+                          <p className="text-slate-600">لا توجد شرائح متاحة</p>
                         </div>
                       </div>
                     )}
@@ -434,13 +472,13 @@ export default function Home() {
                   {/* Carousel Footer */}
                   <div className="mt-4 flex items-center justify-between">
                     <div className="text-sm text-slate-600">
-                      منتجاتنا المميزة ({currentSlide + 1}/{featuredProducts.length})
+                      شرائحنا المميزة ({currentSlide + 1}/{heroSliders.length})
                     </div>
                     <Link
-                      href="/catalogue"
+                      href="/admin/sliders"
                       className="text-sm text-brand-600 hover:text-brand-700 font-semibold"
                     >
-                      عرض الكل →
+                      إدارة الشرائح →
                     </Link>
                   </div>
                 </div>

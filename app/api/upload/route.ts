@@ -69,26 +69,53 @@ export async function POST(request: NextRequest) {
     const fileName = `${timestamp}-${Math.random().toString(36).substring(2)}${fileExtension}`;
     console.log('Generated filename:', fileName);
 
-    // Always use local directory
+    // Force local directory usage
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
     const filePath = path.join(uploadsDir, fileName);
     const fileUrl = `/uploads/${fileName}`;
     
-    console.log('Upload directory:', uploadsDir);
-    console.log('File path:', filePath);
+    console.log('Environment check:');
+    console.log('- CWD:', process.cwd());
+    console.log('- Upload directory:', uploadsDir);
+    console.log('- File path:', filePath);
+    console.log('- VERCEL env:', process.env.VERCEL);
 
     // Create uploads directory if it doesn't exist
-    if (!existsSync(uploadsDir)) {
-      console.log('Creating uploads directory...');
-      await mkdir(uploadsDir, { recursive: true });
-      console.log('Directory created');
-    } else {
-      console.log('Directory already exists');
+    try {
+      if (!existsSync(uploadsDir)) {
+        console.log('Creating uploads directory...');
+        await mkdir(uploadsDir, { recursive: true });
+        console.log('Directory created successfully');
+      } else {
+        console.log('Directory already exists');
+      }
+    } catch (mkdirError) {
+      console.error('Failed to create directory:', mkdirError);
+      return NextResponse.json(
+        { 
+          error: 'Cannot create uploads directory',
+          details: `Failed to create ${uploadsDir}: ${mkdirError instanceof Error ? mkdirError.message : 'Unknown error'}`,
+          suggestion: 'Make sure the application has write permissions to the project directory'
+        },
+        { status: 500 }
+      );
     }
 
     // Write file to disk
-    await writeFile(filePath, buffer);
-    console.log('File written successfully');
+    try {
+      await writeFile(filePath, buffer);
+      console.log('File written successfully to:', filePath);
+    } catch (writeError) {
+      console.error('Failed to write file:', writeError);
+      return NextResponse.json(
+        { 
+          error: 'Cannot write file',
+          details: `Failed to write ${filePath}: ${writeError instanceof Error ? writeError.message : 'Unknown error'}`,
+          suggestion: 'Make sure the uploads directory has write permissions'
+        },
+        { status: 500 }
+      );
+    }
 
     const response = {
       success: true,

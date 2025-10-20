@@ -6,20 +6,28 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 
 export async function POST(request: NextRequest) {
+  console.log('=== Upload API called ===');
+  
   try {
+    // Check authentication
     const session = await getServerSession(authOptions);
+    console.log('Session:', session ? 'exists' : 'null');
     
     if (!session) {
+      console.log('Unauthorized access attempt');
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
 
+    // Get file from form data
     const data = await request.formData();
     const file: File | null = data.get('file') as unknown as File;
+    console.log('File received:', file ? file.name : 'null');
 
     if (!file) {
+      console.log('No file in request');
       return NextResponse.json(
         { error: 'No file uploaded' },
         { status: 400 }
@@ -28,7 +36,10 @@ export async function POST(request: NextRequest) {
 
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+    console.log('File type:', file.type);
+    
     if (!allowedTypes.includes(file.type)) {
+      console.log('Invalid file type:', file.type);
       return NextResponse.json(
         { error: 'Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed.' },
         { status: 400 }
@@ -37,92 +48,61 @@ export async function POST(request: NextRequest) {
 
     // Validate file size (max 5MB)
     const maxSize = 5 * 1024 * 1024; // 5MB
+    console.log('File size:', file.size, 'Max size:', maxSize);
+    
     if (file.size > maxSize) {
+      console.log('File too large');
       return NextResponse.json(
         { error: 'File too large. Maximum size is 5MB.' },
         { status: 400 }
       );
     }
 
+    // Convert file to buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    console.log('Buffer created, size:', buffer.length);
 
     // Generate unique filename
     const timestamp = Date.now();
     const fileExtension = path.extname(file.name);
     const fileName = `${timestamp}-${Math.random().toString(36).substring(2)}${fileExtension}`;
+    console.log('Generated filename:', fileName);
 
-    // Determine upload directory based on environment
-    let uploadsDir: string;
-    let fileUrl: string;
+    // Always use local directory
+    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+    const filePath = path.join(uploadsDir, fileName);
+    const fileUrl = `/uploads/${fileName}`;
     
-    // Check if we're in a serverless environment (like Vercel)
-    const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
-    
-    if (isServerless) {
-      // In serverless environments, use /tmp directory
-      uploadsDir = path.join('/tmp', 'uploads');
-      fileUrl = `/api/files/${fileName}`; // We'll need to create a file serving endpoint
-      
-      console.log('Serverless environment detected, using /tmp directory');
-    } else {
-      // In local/traditional hosting, use public/uploads
-      uploadsDir = path.join(process.cwd(), 'public', 'uploads');
-      fileUrl = `/uploads/${fileName}`;
-      
-      console.log('Local environment detected, using public/uploads directory');
-    }
+    console.log('Upload directory:', uploadsDir);
+    console.log('File path:', filePath);
 
     // Create uploads directory if it doesn't exist
-    try {
-      if (!existsSync(uploadsDir)) {
-        await mkdir(uploadsDir, { recursive: true });
-        console.log('Created uploads directory:', uploadsDir);
-      }
-    } catch (mkdirError) {
-      console.error('Error creating uploads directory:', mkdirError);
-      
-      // If we can't create the directory, return a helpful error
-      return NextResponse.json(
-        { 
-          error: 'Cannot create upload directory',
-          details: `Failed to create directory: ${uploadsDir}. Error: ${mkdirError instanceof Error ? mkdirError.message : 'Unknown error'}`,
-          suggestion: 'Please ensure the application has write permissions or configure external storage (Cloudinary, AWS S3, etc.)'
-        },
-        { status: 500 }
-      );
+    if (!existsSync(uploadsDir)) {
+      console.log('Creating uploads directory...');
+      await mkdir(uploadsDir, { recursive: true });
+      console.log('Directory created');
+    } else {
+      console.log('Directory already exists');
     }
-
-    const filePath = path.join(uploadsDir, fileName);
 
     // Write file to disk
-    try {
-      await writeFile(filePath, buffer);
-      console.log('File written successfully:', filePath);
-    } catch (writeError) {
-      console.error('Error writing file:', writeError);
-      
-      return NextResponse.json(
-        { 
-          error: 'Cannot write file',
-          details: `Failed to write file: ${filePath}. Error: ${writeError instanceof Error ? writeError.message : 'Unknown error'}`,
-          suggestion: 'Please ensure the application has write permissions to the uploads directory'
-        },
-        { status: 500 }
-      );
-    }
+    await writeFile(filePath, buffer);
+    console.log('File written successfully');
 
-    return NextResponse.json({
+    const response = {
       success: true,
       url: fileUrl,
-      filename: fileName,
-      environment: isServerless ? 'serverless' : 'local'
-    });
+      filename: fileName
+    };
+    
+    console.log('Sending response:', response);
+    return NextResponse.json(response);
 
   } catch (error) {
-    console.error('Error uploading file:', error);
+    console.error('=== Upload Error ===');
+    console.error('Error:', error);
     
-    // More detailed error logging
     if (error instanceof Error) {
       console.error('Error message:', error.message);
       console.error('Error stack:', error.stack);
@@ -131,8 +111,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { 
         error: 'Failed to upload file',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        suggestion: 'Check server logs for more details'
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );

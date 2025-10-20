@@ -24,10 +24,14 @@ export async function GET() {
 
 // POST - Create new slider
 export async function POST(request: NextRequest) {
+  console.log('=== Create Slider API called ===');
+  
   try {
     const session = await getServerSession(authOptions);
+    console.log('Session:', session ? 'exists' : 'null');
     
     if (!session) {
+      console.log('Unauthorized access attempt');
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -35,15 +39,20 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    console.log('Request body:', JSON.stringify(body, null, 2));
+    
     const { title, description, image, category, isActive, order, buttonText, buttonLink } = body;
 
     if (!title || !image) {
+      console.log('Missing required fields - title:', !!title, 'image:', !!image);
       return NextResponse.json(
         { error: 'Title and image are required' },
         { status: 400 }
       );
     }
 
+    console.log('Creating slider with data:', { title, image, category, isActive, order });
+    
     const slider = await prisma.heroSlider.create({
       data: {
         title,
@@ -57,11 +66,13 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    console.log('Slider created successfully:', slider.id);
     return NextResponse.json(slider, { status: 201 });
-  } catch (error) {
-    console.error('Error creating slider:', error);
     
-    // More detailed error logging
+  } catch (error) {
+    console.error('=== Create Slider Error ===');
+    console.error('Error:', error);
+    
     if (error instanceof Error) {
       console.error('Error message:', error.message);
       console.error('Error stack:', error.stack);

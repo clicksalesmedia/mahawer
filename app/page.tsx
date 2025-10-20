@@ -224,7 +224,7 @@ export default function Home() {
       <Header />
       
       {/* HERO SLIDER SECTION */}
-      {heroSliders.length > 0 && (
+      {heroSliders.length > 0 ? (
         <section className="relative h-[60vh] overflow-hidden">
           <div className="relative w-full h-full">
             {heroSliders.map((slider, index) => (
@@ -305,6 +305,51 @@ export default function Home() {
               </>
             )}
           </div>
+        </section>
+      ) : (
+        /* Placeholder when no sliders available */
+        <section className="relative h-[60vh] overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200">
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-500/10 via-transparent to-emerald-500/10" />
+          <div className="relative w-full h-full flex items-center justify-center">
+            <div className="text-center max-w-2xl mx-auto px-6">
+              <div className="mb-8">
+                <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-brand-100 to-emerald-100 flex items-center justify-center">
+                  <span className="text-4xl">🎨</span>
+                </div>
+              </div>
+              <h1 className="text-3xl md:text-4xl font-extrabold mb-4 text-slate-800 leading-tight">
+                لا توجد شرائح متاحة حالياً
+              </h1>
+              <p className="text-lg text-slate-600 mb-8 leading-relaxed">
+                سيتم عرض الشرائح المميزة هنا بمجرد إضافتها من لوحة التحكم
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button
+                  onClick={() => {
+                    const phoneNumber = "966550844033";
+                    const message = encodeURIComponent("مرحباً، أود طلب عرض سعر لمواد البناء");
+                    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+                    window.open(whatsappUrl, "_blank");
+                  }}
+                  className="px-8 py-4 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-semibold shadow-lg transition transform hover:scale-105"
+                >
+                  اطلب عرض سعر الآن
+                </button>
+                <Link
+                  href="/catalogue"
+                  className="px-8 py-4 border-2 border-slate-300 hover:border-brand-500 hover:text-brand-700 text-slate-700 rounded-xl font-semibold transition"
+                >
+                  تصفح الكتالوج
+                </Link>
+              </div>
+            </div>
+          </div>
+          
+          {/* Decorative Elements */}
+          <div className="absolute top-8 left-8 w-16 h-16 bg-brand-200/30 rounded-full blur-xl" />
+          <div className="absolute bottom-8 right-8 w-20 h-20 bg-emerald-200/30 rounded-full blur-xl" />
+          <div className="absolute top-1/2 left-4 w-2 h-2 bg-brand-400 rounded-full animate-pulse" />
+          <div className="absolute top-1/3 right-6 w-3 h-3 bg-emerald-400 rounded-full animate-pulse delay-1000" />
         </section>
       )}
 

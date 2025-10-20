@@ -21,6 +21,33 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if we're on Vercel
+    const isVercel = process.env.VERCEL === '1' || process.env.VERCEL_ENV;
+    console.log('Environment - Vercel:', isVercel);
+    
+    if (isVercel) {
+      // On Vercel, suggest using external URLs instead
+      console.log('Vercel detected - file upload not supported');
+      return NextResponse.json(
+        { 
+          error: 'File upload not supported on Vercel',
+          details: 'This application is running on Vercel which has a read-only file system.',
+          suggestion: 'Please use direct image URLs instead. You can use images from the catalogue folder or external URLs.',
+          availableImages: [
+            '/catalogue/Sikaflex Construction.webp',
+            '/catalogue/steel_mesh.png', 
+            '/catalogue/Rock wool.jpg',
+            '/catalogue/Aluminum flashing.jpg',
+            '/catalogue/Ceramic fiber.jpg',
+            '/sliders/slider1.webp',
+            '/sliders/slider2.png',
+            '/sliders/slider3.jpg'
+          ]
+        },
+        { status: 400 }
+      );
+    }
+
     // Get file from form data
     const data = await request.formData();
     const file: File | null = data.get('file') as unknown as File;

@@ -63,10 +63,19 @@ export default function ImageUpload({
           errorMessage += `\n\nاقتراح: ${error.suggestion}`;
         }
         
-        // If it's a Vercel error, show URL input option
-        if (error.error === 'File upload not supported on Vercel') {
+        // If it's a Vercel error or Cloudinary error, show URL input option
+        if (error.error === 'File upload not supported on Vercel' || 
+            error.error === 'Failed to upload to Cloudinary') {
           setShowUrlInput(true);
-          alert(`${errorMessage}\n\nيمكنك استخدام رابط صورة مباشر بدلاً من ذلك.`);
+          
+          let message = `${errorMessage}\n\nيمكنك استخدام رابط صورة مباشر بدلاً من ذلك.`;
+          
+          // Add fallback images if available
+          if (error.fallbackImages && error.fallbackImages.length > 0) {
+            message += '\n\nصور متاحة للاستخدام:\n' + error.fallbackImages.join('\n');
+          }
+          
+          alert(message);
         } else {
           alert(`خطأ في رفع الصورة: ${errorMessage}`);
         }
@@ -200,7 +209,9 @@ export default function ImageUpload({
 
         {/* Help Text */}
         <p className="text-xs text-gray-500">
-          الحد الأقصى: 5 ميجابايت. الصيغ المدعومة: JPG, PNG, WebP, GIF
+          الحد الأقصى: 10 ميجابايت. الصيغ المدعومة: JPG, PNG, WebP, GIF
+          <br />
+          يمكنك أيضاً استخدام الصور من مجلد /catalogue أو روابط خارجية
         </p>
       </div>
     </div>

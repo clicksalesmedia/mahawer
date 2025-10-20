@@ -47,7 +47,20 @@ export default function ImageUpload({
       } else {
         const error = await response.json();
         console.error('Upload error response:', error);
-        const errorMessage = error.details || error.error || 'حدث خطأ غير معروف';
+        
+        let errorMessage = 'حدث خطأ غير معروف';
+        
+        if (error.details) {
+          errorMessage = error.details;
+        } else if (error.error) {
+          errorMessage = error.error;
+        }
+        
+        // Add suggestion if available
+        if (error.suggestion) {
+          errorMessage += `\n\nاقتراح: ${error.suggestion}`;
+        }
+        
         alert(`خطأ في رفع الصورة: ${errorMessage}`);
         setPreview(currentImage || null);
       }

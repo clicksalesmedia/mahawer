@@ -236,33 +236,62 @@ export default function Home() {
               {/* Creative Mobile Visual */}
               <div className="relative mb-8">
                 <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
-                  {!isLoading && featuredProducts.slice(0, 4).map((product, index) => (
-                    <div key={product.id} className={`rounded-2xl overflow-hidden shadow-soft transform transition-all duration-1000 ${
+                  {!slidersLoading && heroSliders.slice(0, 4).map((slider, index) => (
+                    <div key={slider.id} className={`rounded-2xl overflow-hidden shadow-soft transform transition-all duration-1000 ${
                       index % 2 === 0 ? 'translate-y-4' : '-translate-y-4'
                     }`}>
-                      <div className="aspect-square bg-white border border-slate-200">
-                        {product.images && product.images.length > 0 ? (
-                          <img
-                            src={product.images[0]}
-                            alt={product.nameAr}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-2xl">
-                            {product.category.emoji || '📦'}
+                      <div className="aspect-square bg-white border border-slate-200 relative">
+                        <img
+                          src={slider.image}
+                          alt={slider.title}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            console.log('Mobile slider image failed to load:', slider.image);
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            const parent = target.parentElement;
+                            if (parent) {
+                              parent.innerHTML = `<div class="w-full h-full flex items-center justify-center text-2xl bg-gradient-to-r from-brand-500 to-emerald-500 text-white">🏗️</div>`;
+                            }
+                          }}
+                        />
+                        {/* Overlay with slider info */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300">
+                          <div className="absolute bottom-2 left-2 right-2 text-white">
+                            <h4 className="text-xs font-bold truncate">{slider.title}</h4>
+                            {slider.category && (
+                              <span className="text-xs bg-white/20 px-1 py-0.5 rounded text-white/90">
+                                {slider.category}
+                              </span>
+                            )}
                           </div>
-                        )}
+                        </div>
                       </div>
                     </div>
                   ))}
                   
-                  {isLoading && (
+                  {slidersLoading && (
                     <>
                       {[...Array(4)].map((_, i) => (
                         <div key={i} className={`rounded-2xl overflow-hidden shadow-soft transform ${
                           i % 2 === 0 ? 'translate-y-4' : '-translate-y-4'
                         }`}>
                           <div className="aspect-square bg-slate-100 animate-pulse" />
+                        </div>
+                      ))}
+                    </>
+                  )}
+                  
+                  {/* Fallback when no sliders available */}
+                  {!slidersLoading && heroSliders.length === 0 && (
+                    <>
+                      {[...Array(4)].map((_, i) => (
+                        <div key={i} className={`rounded-2xl overflow-hidden shadow-soft transform ${
+                          i % 2 === 0 ? 'translate-y-4' : '-translate-y-4'
+                        }`}>
+                          <div className="aspect-square bg-gradient-to-r from-brand-100 to-emerald-100 flex items-center justify-center text-2xl">
+                            🏗️
+                          </div>
                         </div>
                       ))}
                     </>

@@ -90,13 +90,29 @@ export const trackQuotationRequest = (data: {
   itemCount: number;
   totalValue?: number;
 }) => {
-  trackConversion('quotation_request', data.totalValue, {
+  if (typeof window === 'undefined' || !window.gtag) return;
+
+  // Track for Google Ads with specific conversion label
+  window.gtag('event', 'conversion', {
+    send_to: 'AW-17438158871/vXtLCLyW5rkbEJfglPtA',
+    value: data.totalValue || 100,
+    currency: 'SAR',
+    transaction_id: Date.now().toString()
+  });
+
+  // Also track for Google Analytics
+  window.gtag('event', 'quotation_request', {
+    event_category: 'conversions',
+    event_label: 'quotation_request',
+    value: data.totalValue || 100,
     customer_name: data.customerName,
     customer_email: data.customerEmail,
     customer_phone: data.customerPhone,
     company_name: data.companyName,
     item_count: data.itemCount
   });
+
+  console.log(`Conversion tracked: quotation_request`, data);
 };
 
 /**
@@ -109,13 +125,27 @@ export const trackContactSubmission = (data: {
   company?: string;
   subject: string;
 }) => {
-  trackConversion('contact_form_submission', 1, {
+  if (typeof window === 'undefined' || !window.gtag) return;
+
+  // Track for Google Ads with specific conversion label
+  window.gtag('event', 'conversion', {
+    send_to: 'AW-17438158871/UHWOCIem5rkbEJfglPtA',
+    value: 50,
+    currency: 'SAR'
+  });
+
+  // Also track for Google Analytics
+  window.gtag('event', 'contact_form_submission', {
+    event_category: 'conversions',
+    event_label: 'contact_form_submission',
     contact_name: data.name,
     contact_email: data.email,
     contact_phone: data.phone,
     contact_company: data.company,
     contact_subject: data.subject
   });
+
+  console.log(`Conversion tracked: contact_form_submission`, data);
 };
 
 /**
@@ -149,10 +179,24 @@ export const trackWhatsAppClick = (source: string, message?: string) => {
  * Track phone call clicks
  */
 export const trackPhoneClick = (source: string, phoneNumber: string) => {
-  trackConversion('phone_call_click', 1, {
+  if (typeof window === 'undefined' || !window.gtag) return;
+
+  // Track for Google Ads with specific conversion label
+  window.gtag('event', 'conversion', {
+    send_to: 'AW-17438158871/iHgiCPDI47kbEJfglPtA',
+    value: 30,
+    currency: 'SAR'
+  });
+
+  // Also track for Google Analytics
+  window.gtag('event', 'phone_call_click', {
+    event_category: 'conversions',
+    event_label: 'phone_call_click',
     click_source: source,
     phone_number: phoneNumber
   });
+
+  console.log(`Conversion tracked: phone_call_click`, { source, phoneNumber });
 };
 
 /**

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { trackWhatsAppClick } from "../lib/analytics";
 
 interface Product {
   id: string;
@@ -714,6 +715,7 @@ export default function Home() {
                 </Link>
                 <button
                   onClick={() => {
+                    trackWhatsAppClick("homepage_cta_bottom", "مرحباً، أود طلب عرض سعر لمواد البناء");
                     const phoneNumber = "966550844033";
                     const message = encodeURIComponent("مرحباً، أود طلب عرض سعر لمواد البناء");
                     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;

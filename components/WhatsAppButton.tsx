@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { trackWhatsAppClick } from "../lib/analytics";
 
 export default function WhatsAppButton() {
   const [isVisible, setIsVisible] = useState(false);
@@ -15,6 +16,9 @@ export default function WhatsAppButton() {
   }, []);
 
   const handleWhatsAppClick = () => {
+    // Track the WhatsApp click conversion
+    trackWhatsAppClick("floating_button", "مرحباً، أود الاستفسار عن منتجاتكم");
+    
     // Replace with your actual WhatsApp number
     const phoneNumber = "966550844033"; // +966 55 084 4033 without + and spaces
     const message = encodeURIComponent("مرحباً، أود الاستفسار عن منتجاتكم");

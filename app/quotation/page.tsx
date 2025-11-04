@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { trackQuotationRequest } from "../../lib/analytics";
 
 interface CartItem {
   id: string;
@@ -61,6 +62,18 @@ export default function QuotationPage() {
       });
 
       if (response.ok) {
+        const result = await response.json();
+        
+        // Track the quotation request conversion
+        trackQuotationRequest({
+          customerName: customerInfo.name,
+          customerEmail: customerInfo.email,
+          customerPhone: customerInfo.phone,
+          companyName: customerInfo.company,
+          itemCount: cartItems.length,
+          totalValue: cartItems.length * 100 // Estimated value per item
+        });
+
         setSubmitted(true);
         // Clear cart
         localStorage.removeItem('mahawer-cart');

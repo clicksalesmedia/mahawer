@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import { trackWhatsAppClick } from "../../lib/analytics";
 
 export default function AboutPage() {
   // Animated counter states
@@ -360,6 +361,7 @@ export default function AboutPage() {
                 </Link>
                 <button
                   onClick={() => {
+                    trackWhatsAppClick("about_page", "مرحباً، أود طلب عرض سعر لمواد البناء");
                     const phoneNumber = "966550844033";
                     const message = encodeURIComponent("مرحباً، أود طلب عرض سعر لمواد البناء");
                     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;

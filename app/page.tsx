@@ -359,6 +359,7 @@ export default function Home() {
                 <div className="mt-8 flex items-center gap-4">
                   <button
                     onClick={() => {
+                      trackWhatsAppClick("homepage_hero", "مرحباً، أود طلب عرض سعر لمواد البناء");
                       const phoneNumber = "966550844033";
                       const message = encodeURIComponent("مرحباً، أود طلب عرض سعر لمواد البناء");
                       const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;

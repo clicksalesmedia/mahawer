@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import { trackProductView, trackProductInterest, trackFileDownload, initScrollTracking, initTimeTracking } from "../../lib/analytics";
 
 interface CartItem {
   id: string;
@@ -101,6 +102,15 @@ export default function CataloguePage() {
   // Fetch categories on mount
   useEffect(() => {
     fetchCategories();
+    
+    // Initialize analytics tracking
+    const cleanupScroll = initScrollTracking('catalogue');
+    const cleanupTime = initTimeTracking('catalogue');
+    
+    return () => {
+      if (cleanupScroll) cleanupScroll();
+      if (cleanupTime) cleanupTime();
+    };
   }, []);
 
   // Reset page when category or search changes
@@ -131,6 +141,9 @@ export default function CataloguePage() {
   }, [cartItems]);
 
   const handleAddProduct = (product: Product) => {
+    // Track product view/interest
+    trackProductView(product.id, product.nameAr, product.category.nameAr);
+    
     setSelectedProduct(product);
     setPopupQuantity(1);
     setPopupSpecs("");
@@ -151,6 +164,9 @@ export default function CataloguePage() {
         images: selectedProduct.images,
         categoryEmoji: selectedProduct.category.emoji
       };
+      
+      // Track product interest (adding to cart)
+      trackProductInterest(selectedProduct.id, selectedProduct.nameAr, popupQuantity);
       
       setCartItems(prev => [...prev, newItem]);
       setShowPopup(false);
@@ -185,10 +201,13 @@ export default function CataloguePage() {
               </p>
             </div>
             <a
-              href="#"
+              href="/catalogue.pdf"
+              onClick={() => trackFileDownload('catalogue.pdf', 'pdf', 'catalogue_page')}
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm"
             >
-              اعرف المزيد
+              تحميل الكتالوج
             </a>
           </div>
         </div>

@@ -30,6 +30,32 @@ export default function RootLayout({
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        
+        {/* Google Ads (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17438158871"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-17438158871');
+            `,
+          }}
+        />
+        
+        {/* Google Analytics (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q5SG382TR5"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-Q5SG382TR5');
+            `,
+          }}
+        />
       </head>
       <body
         className={`${cairo.variable} ${inter.variable} antialiased`}

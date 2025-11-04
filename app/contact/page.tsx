@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import { trackContactSubmission, trackPhoneClick } from "../../lib/analytics";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -29,19 +30,41 @@ export default function ContactPage() {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setSubmitStatus("success");
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        company: "",
-        subject: "",
-        message: ""
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
+
+      if (response.ok) {
+        const result = await response.json();
+        
+        // Track the conversion
+        trackContactSubmission({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          subject: formData.subject
+        });
+
+        setSubmitStatus("success");
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          company: "",
+          subject: "",
+          message: ""
+        });
+      } else {
+        throw new Error('Failed to submit contact form');
+      }
     } catch (error: unknown) {
+      console.error('Error submitting contact form:', error);
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
@@ -250,7 +273,14 @@ export default function ContactPage() {
                         <h3 className="font-bold text-lg mb-2">الهاتف</h3>
                         <p className="text-slate-600 mb-2">تواصل معنا مباشرة</p>
                         <div className="space-y-1">
-                          <p className="font-semibold text-brand-700" dir="ltr">+966 55 084 4033</p>
+                          <a 
+                            href="tel:+966550844033"
+                            onClick={() => trackPhoneClick('contact_page', '+966550844033')}
+                            className="font-semibold text-brand-700 hover:text-brand-800 transition"
+                            dir="ltr"
+                          >
+                            +966 55 084 4033
+                          </a>
                           <p className="text-sm text-slate-500">7 AM–8 PM</p>
                           <p className="text-sm text-slate-500">Friday Closed</p>
                         </div>
@@ -307,7 +337,14 @@ export default function ContactPage() {
                         <h3 className="font-bold text-lg mb-2">واتساب</h3>
                         <p className="text-slate-600 mb-2">للاستفسارات السريعة</p>
                         <div className="space-y-1">
-                          <p className="font-semibold text-green-700" dir="ltr">+966 55 084 4033</p>
+                          <a 
+                            href="tel:+966550844033"
+                            onClick={() => trackPhoneClick('contact_page_whatsapp', '+966550844033')}
+                            className="font-semibold text-green-700 hover:text-green-800 transition"
+                            dir="ltr"
+                          >
+                            +966 55 084 4033
+                          </a>
                           <p className="text-sm text-slate-500">متاح 24/7</p>
                         </div>
                       </div>

@@ -110,6 +110,22 @@ model Inquiry {
   @@map("inquiries")
 }
 
+model Contact {
+  id        String        @id @default(cuid())
+  name      String
+  email     String?
+  phone     String?
+  company   String?
+  subject   String
+  message   String
+  status    ContactStatus @default(NEW)
+  notes     String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("contacts")
+}
+
 model InquiryItem {
   id            String  @id @default(cuid())
   inquiry       Inquiry @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
@@ -138,6 +154,13 @@ enum InquiryStatus {
   QUOTED
   COMPLETED
   CANCELLED
+}
+
+enum ContactStatus {
+  NEW
+  READ
+  REPLIED
+  CLOSED
 }
 
 // Hero Slider model

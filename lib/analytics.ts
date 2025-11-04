@@ -122,10 +122,27 @@ export const trackContactSubmission = (data: {
  * Track WhatsApp button clicks
  */
 export const trackWhatsAppClick = (source: string, message?: string) => {
-  trackConversion('whatsapp_click', 1, {
+  if (typeof window === 'undefined' || !window.gtag) return;
+
+  // Track for Google Ads with specific conversion label
+  window.gtag('event', 'conversion', {
+    send_to: 'AW-17438158871/Xix9CMa37LkbEJfglPtA',
+    event_category: 'conversions',
+    event_label: 'whatsapp_click',
+    value: 1,
     click_source: source,
     message_type: message ? 'custom' : 'default'
   });
+
+  // Also track for Google Analytics
+  window.gtag('event', 'whatsapp_click', {
+    event_category: 'conversions',
+    event_label: 'whatsapp_click',
+    click_source: source,
+    message_type: message ? 'custom' : 'default'
+  });
+
+  console.log(`Conversion tracked: whatsapp_click`, { source, message });
 };
 
 /**
